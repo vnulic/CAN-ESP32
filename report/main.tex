@@ -1,0 +1,195 @@
+% !TeX program = xelatex
+% !TeX encoding = UTF-8 Unicode
+\documentclass[12pt,a4paper]{report}
+
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{fontspec}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{setspace}
+\usepackage{indentfirst}
+\usepackage{tikz}
+\usepackage[american]{circuitikz}
+\usepackage{xcolor}
+\usepackage{listings}
+
+\usetikzlibrary{chains,positioning,shapes.geometric}
+
+\renewcommand{\contentsname}{Mục lục}
+\renewcommand{\listfigurename}{Danh sách hình ảnh}
+
+\setmainfont{Times New Roman}
+\setsansfont{Arial}
+\setmonofont{Courier New}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=black,
+  pdftitle={Bao cao he thong CAN tren ESP32},
+  pdfauthor={Can bo sung thong tin sinh vien},
+  pdfsubject={CAN Bus, ESP32, IDS, Automotive Security}
+}
+
+\onehalfspacing
+\setlength{\parindent}{1.2cm}
+\setlength{\parskip}{0.4em}
+\setlength{\headheight}{16pt}
+\sloppy
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Báo cáo kỹ thuật hệ thống CAN trên ESP32}
+\fancyhead[R]{\thepage}
+
+\newcommand{\reportsection}[1]{%
+  \section*{#1}%
+  \addcontentsline{toc}{section}{#1}%
+}
+
+\newcommand{\reportsubsection}[1]{%
+  \subsection*{#1}%
+  \addcontentsline{toc}{subsection}{#1}%
+}
+
+\newcommand{\placeholderfigure}[2]{%
+  \begin{figure}[H]
+    \centering
+    \fbox{%
+      \parbox{0.82\textwidth}{%
+        \centering
+        \vspace{1.2cm}
+        #1\\
+        Bổ sung hình minh họa sau.
+        \vspace{1.2cm}
+      }%
+    }
+    \caption{#2}
+  \end{figure}
+}
+
+\newcommand{\missingnote}[1]{%
+  \begin{quote}
+    \textbf{Ghi chú:} #1
+  \end{quote}
+}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false
+}
+
+\begin{document}
+
+\begin{titlepage}
+  \thispagestyle{empty}
+  \begin{tikzpicture}[remember picture, overlay]
+    \draw[blue!70!violet, line width=2.4pt]
+      ($(current page.north west)+(0.78cm,-0.78cm)$)
+      rectangle
+      ($(current page.south east)+(-0.78cm,0.78cm)$);
+    \draw[blue!45!violet, line width=0.9pt]
+      ($(current page.north west)+(1.03cm,-1.03cm)$)
+      rectangle
+      ($(current page.south east)+(-1.03cm,1.03cm)$);
+
+    \node[
+      align=center,
+      text width=0.82\paperwidth,
+      font=\bfseries\fontsize{18}{23}\selectfont
+    ] at ($(current page.north)+(0,-3.25cm)$) {ĐẠI HỌC QUỐC GIA HÀ NỘI};
+
+    \node[
+      align=center,
+      text width=0.82\paperwidth,
+      font=\bfseries\fontsize{18}{23}\selectfont
+    ] at ($(current page.north)+(0,-4.25cm)$) {TRƯỜNG ĐẠI HỌC CÔNG NGHỆ};
+
+    \IfFileExists{images/cover-logo.png}{%
+      \node at ($(current page.north)+(0,-7.05cm)$) {%
+        \includegraphics[width=4.1cm]{images/cover-logo.png}%
+      };
+    }{}
+
+    \node[
+      align=center,
+      text width=0.78\paperwidth,
+      font=\bfseries\fontsize{18}{23}\selectfont
+    ] at ($(current page.north)+(0,-11.55cm)$) {%
+      CyberCAN Defense: Phát hiện và phòng\\
+      thủ xâm nhập mạng nội bộ ô tô%
+    };
+
+    \node[
+      align=center,
+      font=\fontsize{14}{18}\selectfont
+    ] at ($(current page.north)+(0,-14.45cm)$) {Nhóm 4};
+
+    \node at ($(current page.north)+(0,-19.1cm)$) {%
+      \fontsize{12}{16}\selectfont
+      \begin{tabular}{@{}p{5.4cm}r@{}}
+        Phạm Thế Duy & 23021787 \\
+        Bùi Đăng Dương & 23020795 \\
+        Nguyễn Thị Ngọc Bích & 23021770 \\
+        Nguyễn Hữu Thái Dương & 23021789 \\
+      \end{tabular}
+    };
+
+    \node[
+      align=center,
+      text width=0.72\paperwidth,
+      font=\fontsize{13}{18}\selectfont
+    ] at ($(current page.north)+(0,-23.0cm)$) {%
+      Cơ sở đo lường và điều khiển số\\[0.38cm]
+      Lớp: ELT3207 1\\[0.38cm]
+      Giảng viên: TS. Hoàng Gia Hưng\\[0.38cm]
+      Mentor: Nguyễn Quang Khôi%
+    };
+
+    \node[
+      align=center,
+      font=\bfseries\fontsize{14}{18}\selectfont
+    ] at ($(current page.south)+(0,1.65cm)$) {Hà Nội, Tháng 6 năm 2026};
+  \end{tikzpicture}
+  \null
+\end{titlepage}
+
+
+
+\pagenumbering{roman}
+\input{00-loi-cam-doan.tex}
+\clearpage
+\input{00-loi-cam-on.tex}
+\clearpage
+\tableofcontents
+\clearpage
+\addcontentsline{toc}{chapter}{Danh sách hình ảnh}
+\listoffigures
+\clearpage
+\input{00-danh-sach-lien-ket.tex}
+\clearpage
+
+\pagenumbering{arabic}
+
+\input{01-loi-mo-dau.tex}
+\input{02-chuong-1.tex}
+\input{03-chuong-2.tex}
+\input{04-chuong-3.tex}
+\input{05-chuong-4.tex}
+\input{06-chuong-5.tex}
+\input{07-chuong-6.tex}
+\input{08-chuong-7.tex}
+\input{09-tai-lieu-tham-khao.tex}
+
+\end{document}

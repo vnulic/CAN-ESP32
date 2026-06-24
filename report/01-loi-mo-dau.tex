@@ -1,0 +1,19 @@
+\chapter*{Lời mở đầu}
+\addcontentsline{toc}{chapter}{Lời mở đầu}
+
+Mạng truyền thông \textit{Controller Area Network} (CAN) là một thành phần quan trọng trong
+các hệ thống ô tô và nhúng thời gian thực nhờ khả năng truyền dữ liệu tin cậy, độ trễ thấp
+và cơ chế ưu tiên bản tin theo mã định danh. Tuy nhiên, CAN ban đầu không được thiết kế
+với trọng tâm là an toàn thông tin, nên vẫn tồn tại nhiều hạn chế như thiếu xác thực nguồn
+gửi, không mã hóa dữ liệu và khó ngăn chặn các hành vi phát lại, giả mạo hoặc gây ngập
+lưu lượng trên bus. Khi số lượng thiết bị kết nối ngày càng tăng, các rủi ro này trở thành
+một vấn đề cần được quan tâm trong quá trình nghiên cứu và triển khai hệ thống.
+
+Từ thực tế đó, đề tài xây dựng mô hình thử nghiệm \textit{CyberCAN Defense} trên nền tảng
+\textit{ESP32} kết hợp transceiver CAN nhằm mô phỏng quá trình truyền nhận bản tin, các
+kịch bản tấn công cơ bản và cơ chế phát hiện bất thường trên bus. Hệ thống được phát triển
+theo hướng gọn nhẹ nhưng vẫn hỗ trợ các chức năng chính như giám sát lưu lượng CAN,
+mô phỏng replay, spoofing và flood, đồng thời cung cấp giao diện web để theo dõi cảnh báo
+và điều khiển tập trung. Báo cáo tập trung trình bày cơ sở lý thuyết của giao thức CAN, các
+vấn đề an ninh liên quan, cấu trúc phần cứng dùng ESP32 và nguyên lý hoạt động của hệ
+thống đã xây dựng.

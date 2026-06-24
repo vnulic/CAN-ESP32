@@ -1,0 +1,38 @@
+\chapter{Tổng kết và hướng phát triển}
+
+\section{Tổng kết}
+Bài tập lớn ``CyberCAN Defense - Phát hiện và phòng thủ xâm nhập mạng nội bộ ô tô'' tập trung nghiên cứu giao thức CAN, phân tích các điểm yếu bảo mật đặc trưng của bus này và xây dựng một mô hình giám sát, phát hiện, phòng thủ trên nền tảng ESP32 \cite{bosch-can20,koscher2010,miller2015}.
+
+Trong quá trình thực hiện, nhóm đã đạt được các kết quả nổi bật sau:
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Nghiên cứu lý thuyết nền tảng:} Nhóm đã hệ thống lại các kiến thức quan trọng về CAN như cấu trúc khung dữ liệu, cơ chế phân xử ưu tiên, truyền thông broadcast, phát hiện lỗi và yêu cầu lớp vật lý của bus \cite{bosch-can20}.
+    \item \textbf{Xây dựng mô hình hệ thống CAN thực tế:} Sử dụng các bo mạch vi điều khiển ESP32 và các module CAN của nhóm (dùng transceiver TJA1050 hoặc phần cứng tương đương), nhóm đã thiết lập mô hình bus CAN hai chiều giữa nhiều nút và máy tính giám sát \cite{espressif-twai,nxp-tja1050,bosch-can20}. Firmware được triển khai theo hướng gọn nhẹ, dễ kiểm thử và bám sát phần cứng thực tế của mô hình.
+    \item \textbf{Thiết kế hệ thống truyền nhận cơ bản và có bảo vệ:}
+    \begin{itemize}
+        \item Luồng truyền nhận CAN cơ bản được xây dựng để mô phỏng hoạt động bình thường giữa các nút trong mạng \cite{koscher2010,miller2015}.
+        \item Luồng có bảo vệ tích hợp bộ đếm thông điệp, phát hiện lặp khung, phát hiện ngập lưu lượng và cơ chế chặn theo CAN ID khi có cảnh báo \cite{koscher2010,miller2015}.
+    \end{itemize}
+    \item \textbf{Mô phỏng tấn công và phòng thủ:}
+    \begin{itemize}
+        \item Hệ thống hỗ trợ mô phỏng các kịch bản replay, spoofing theo chu kỳ và spam/DoS thông qua các lệnh điều khiển trên terminal \cite{koscher2010,miller2015}.
+        \item Cơ chế phòng thủ cho phép phát hiện bản tin bất thường và cô lập tạm thời các CAN ID bị nghi ngờ ở mức ứng dụng \cite{koscher2010,miller2015}.
+    \end{itemize}
+    \item \textbf{Xây dựng giao diện trực quan bằng website:} Ứng dụng web dùng FastAPI, WebSocket và kết nối serial để theo dõi bản tin CAN, hiển thị cảnh báo, điều khiển tấn công và kích hoạt phòng thủ từ giao diện tập trung \cite{fastapi-docs,pyserial-docs}.
+    \item \textbf{Minh họa kết quả qua thực nghiệm:} Mô hình phần cứng và phần mềm của đề tài cho thấy khả năng trình diễn rõ ràng luồng truyền CAN cơ bản, kịch bản tấn công và phản ứng của cơ chế bảo vệ trên cùng một hệ thống.
+\end{itemize}
+
+Kết quả của dự án cho thấy cách tiếp cận phát hiện bất thường kết hợp chặn theo ID có thể nâng cao khả năng quan sát và giảm tác động của các bản tin nghi ngờ trong mô hình CAN thử nghiệm \cite{koscher2010,miller2015}. Đây là nền tảng phù hợp để tiếp tục phát triển các cơ chế bảo mật mạnh hơn cho mạng truyền thông nội bộ ô tô.
+
+\section{Hướng phát triển trong tương lai}
+Để mở rộng tiềm năng và ứng dụng thực tiễn của dự án, nhóm đề xuất một số hướng phát triển như sau:
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Tăng cường bảo mật với mã hóa và xác thực:} Nghiên cứu các thuật toán mật mã nhẹ hoặc mã xác thực thông điệp phù hợp với giới hạn tài nguyên của vi điều khiển và kích thước khung CAN 2.0.
+    \item \textbf{Nâng cấp cơ chế phát hiện bất thường:} Mở rộng IDS theo hướng kết hợp thống kê thời gian thực với mô hình học máy để nhận biết tốt hơn các mẫu tấn công chưa xuất hiện trong tập luật hiện tại.
+    \item \textbf{Tối ưu cơ chế phòng thủ:} Bổ sung chính sách chặn theo thời gian thích nghi, phân biệt mức độ nghiêm trọng của cảnh báo và tránh chặn nhầm các bản tin hợp lệ.
+    \item \textbf{Phát triển dashboard thời gian thực:} Hoàn thiện giao diện giám sát với biểu đồ lưu lượng theo CAN ID, lịch sử cảnh báo và nhật ký sự kiện phục vụ đánh giá sau thực nghiệm.
+    \item \textbf{Mở rộng mô hình phần cứng:} Thử nghiệm với nhiều nút hơn, nhiều loại tải hơn hoặc gateway trung gian để mô phỏng gần hơn kiến trúc mạng trong ô tô thực.
+    \item \textbf{Hướng đến hệ thống đa giao thức:} Bên cạnh CAN, có thể mở rộng nghiên cứu sang LIN, CAN FD, FlexRay hoặc Automotive Ethernet để hình thành cách tiếp cận bảo mật toàn diện hơn.
+\end{itemize}
+
+Với xu hướng phát triển mạnh của ô tô điện, xe kết nối và các hệ thống điều khiển ngày càng thông minh, bảo mật mạng truyền thông trong xe sẽ tiếp tục là yêu cầu quan trọng. Đề tài CyberCAN Defense là bước khởi đầu tốt để nhóm tiếp tục phát triển các mô hình bảo mật nhúng gắn với phần cứng và mã nguồn do chính nhóm làm chủ.

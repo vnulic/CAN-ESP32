@@ -1,0 +1,124 @@
+\chapter{Bảo mật trong hệ thống mạng CAN}
+
+\section{Các vấn đề về bảo mật trong hệ thống mạng CAN}
+Mạng CAN (\textit{Controller Area Network}) được thiết kế từ đầu nhằm tối ưu cho tốc độ truyền thông và độ tin cậy trong các hệ thống nhúng, đặc biệt là ô tô. Tuy nhiên, thiết kế ban đầu của CAN không tập trung vào các yêu cầu bảo mật, vì vậy giao thức này tồn tại nhiều lỗ hổng tiềm ẩn khi được đặt trong môi trường kết nối hiện đại.
+
+Dưới đây là một số vấn đề bảo mật chính của mạng CAN:
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Không có cơ chế xác thực (Authentication):} Bất kỳ thiết bị nào được kết nối vào bus CAN đều có thể gửi thông điệp. Hệ thống không có cách tự nhiên để xác minh nguồn gốc thực sự của thông điệp đó.
+    \item \textbf{Không có mã hóa (Encryption):} Dữ liệu trên bus CAN được truyền ở dạng rõ ràng (\textit{plaintext}), tạo điều kiện cho kẻ tấn công nghe lén và phân tích nội dung.
+    \item \textbf{Không có phân quyền truy cập (Access Control):} Tất cả các node trên mạng đều chia sẻ cùng một môi trường truyền thông, không có cơ chế kiểm soát vai trò hay đặc quyền truy cập.
+    \item \textbf{Dễ bị tấn công từ chối dịch vụ (Denial-of-Service - DoS):} Một thiết bị độc hại có thể liên tục gửi các frame có ID ưu tiên cao để chiếm quyền truy cập bus, làm gián đoạn hoạt động của các node khác.
+    \item \textbf{Khả năng nghe trộm (Eavesdropping):} Vì toàn bộ bus chia sẻ chung tín hiệu, mọi node đều có thể quan sát các thông điệp đang lưu thông trên mạng.
+    \item \textbf{Dễ bị giả mạo (Spoofing):} Một thiết bị độc hại có thể giả mạo ID của một node hợp lệ để phát thông điệp sai lệch lên mạng.
+\end{itemize}
+
+\section{Các phương pháp bảo mật trong hệ thống mạng CAN}
+Để khắc phục các hạn chế nêu trên, nhiều giải pháp bảo mật đã được đề xuất. Mỗi phương pháp có ưu điểm và đánh đổi riêng, tùy thuộc vào khả năng phần cứng, yêu cầu thời gian thực và kiến trúc tổng thể của hệ thống.
+
+\subsection{Mã hóa thông tin (Encryption)}
+\textbf{Nguyên lý.} Dữ liệu truyền trên bus CAN được mã hóa để ngăn chặn việc bị nghe lén hoặc chỉnh sửa trái phép. Nhờ đó, chỉ các thiết bị hợp lệ mới có thể giải mã và sử dụng thông điệp.
+
+\textbf{Cách thực hiện.}
+\begin{itemize}[leftmargin=*]
+    \item \textit{Mã hóa đối xứng (AES):} Tất cả các node chia sẻ một khóa bí mật chung. Mỗi thông điệp được mã hóa trước khi truyền và chỉ các node có khóa đúng mới có thể giải mã.
+    \item \textit{Mã hóa bất đối xứng (RSA):} Mỗi node có một cặp khóa công khai và khóa bí mật. Node gửi dùng khóa công khai của node nhận để mã hóa, còn node nhận dùng khóa bí mật để giải mã.
+\end{itemize}
+
+\textbf{Ví dụ.} Một node gửi dữ liệu $D$ được mã hóa thành $E_{K}(D)$ bằng AES-128. Node nhận dùng cùng khóa $K$ để giải mã và thu lại dữ liệu gốc.
+
+\textbf{Ưu điểm.} Đảm bảo tính riêng tư và an toàn của thông điệp. Giảm nguy cơ nghe lén và giả mạo nội dung.
+
+\textbf{Nhược điểm.} Tốn tài nguyên xử lý và bộ nhớ, đặc biệt với các thuật toán nặng như RSA. Có thể làm tăng độ trễ truyền thông nếu không được tối ưu. Việc quản lý khóa trong môi trường nhúng tương đối phức tạp.
+
+\subsection{Xác thực thông điệp (Message Authentication)}
+\textbf{Nguyên lý.} Một mã xác thực thông điệp (MAC - \textit{Message Authentication Code}) được gắn thêm vào dữ liệu để kiểm tra nguồn gốc và tính toàn vẹn của thông điệp.
+
+\textbf{Cách thực hiện.}
+\begin{itemize}[leftmargin=*]
+    \item Sử dụng hàm băm kết hợp với khóa bí mật để tạo mã xác thực, ví dụ như HMAC-SHA256.
+    \item Node gửi tính giá trị MAC từ dữ liệu và truyền kèm trong payload.
+    \item Node nhận tính lại MAC và so sánh với giá trị đã nhận; nếu trùng khớp, thông điệp được xem là hợp lệ.
+\end{itemize}
+
+\textbf{Ví dụ.} Với dữ liệu $D$ và khóa $K$, node gửi tính $\text{MAC} = \text{HMAC}_{K}(D)$ rồi gửi cặp $(D, \text{MAC})$. Node nhận tính lại $\text{HMAC}_{K}(D)$ để kiểm tra.
+
+\textbf{Ưu điểm.} Ngăn chặn giả mạo thông điệp. Phát hiện được các sửa đổi trái phép trong quá trình truyền.
+
+\textbf{Nhược điểm.} Không tự chống được tấn công phát lại nếu không kết hợp thêm bộ đếm hoặc dấu thời gian. Làm tăng kích thước payload, dễ chạm giới hạn 8 byte của CAN 2.0. Tăng tải tính toán trên vi điều khiển.
+
+\subsection{Sử dụng bộ đếm tin nhắn đơn giản (Simple Message Counter)}
+\textbf{Nguyên lý.} Mỗi thông điệp được gắn một bộ đếm tăng dần để đảm bảo tính ``tươi mới'' (\textit{freshness}). Thiết bị nhận dùng giá trị này để phát hiện và từ chối các bản tin bị phát lại.
+
+\textbf{Cách thực hiện.}
+\begin{itemize}[leftmargin=*]
+    \item Gắn một trường bộ đếm nhỏ, ví dụ 8 bit hoặc 16 bit, vào thông điệp $M_k$.
+    \item Thiết bị nhận lưu giá trị bộ đếm gần nhất cho từng ID hoặc từng phiên giao tiếp.
+    \item Nếu bộ đếm trong thông điệp mới không lớn hơn giá trị đã lưu, thông điệp có thể bị xem là bản sao hoặc lỗi thời.
+\end{itemize}
+
+\textbf{Ví dụ.} Nếu thông điệp trước đó có bộ đếm là 5 thì thông điệp kế tiếp hợp lệ phải có bộ đếm bằng 6 hoặc lớn hơn.
+
+\textbf{Ưu điểm.} Cơ chế đơn giản, hiệu quả và phù hợp với vi điều khiển giới hạn tài nguyên. Giúp chống lại các cuộc tấn công phát lại ở mức cơ bản.
+
+\textbf{Nhược điểm.} Không tự bảo vệ trước giả mạo hoặc nghe lén nếu không kết hợp với MAC hay mã hóa. Yêu cầu thiết bị nhận phải lưu trạng thái bộ đếm, có thể làm tăng nhu cầu bộ nhớ.
+
+\subsection{Phát hiện xâm nhập (Intrusion Detection System - IDS)}
+\textbf{Nguyên lý.} IDS giám sát và phân tích luồng dữ liệu trên bus CAN để phát hiện các hành vi bất thường hoặc độc hại.
+
+\textbf{Cách thực hiện.}
+\begin{itemize}[leftmargin=*]
+    \item Thu thập dữ liệu CAN và đánh giá bất thường dựa trên tập luật (\textit{rule-based}) hoặc mô hình học máy.
+    \item So sánh với hành vi bình thường để phát hiện dấu hiệu lạ như tần suất gửi tăng đột biến hoặc xuất hiện ID không mong đợi.
+    \item Gửi cảnh báo hoặc kích hoạt cơ chế chặn khi phát hiện rủi ro.
+\end{itemize}
+
+\textbf{Ví dụ.} Nếu một ID thường chỉ gửi 10 thông điệp mỗi phút nhưng đột nhiên phát 100 thông điệp trong vài giây, IDS có thể xem đây là dấu hiệu tấn công.
+
+\textbf{Ưu điểm.} Không đòi hỏi thay đổi sâu vào giao thức CAN gốc. Có khả năng phát hiện các kiểu tấn công mới chưa được định nghĩa trước.
+
+\textbf{Nhược điểm.} Có thể tạo ra cảnh báo giả (\textit{false positive}). Yêu cầu năng lực xử lý tương đối cao nếu dùng mô hình phức tạp.
+
+\subsection{Phân vùng mạng (Segmentation)}
+\textbf{Nguyên lý.} Hệ thống CAN được chia thành nhiều vùng nhỏ để giới hạn phạm vi ảnh hưởng khi xảy ra sự cố bảo mật. Các vùng thường giao tiếp với nhau qua gateway hoặc firewall nội bộ.
+
+\textbf{Cách thực hiện.}
+\begin{itemize}[leftmargin=*]
+    \item Thiết kế hệ thống thành các miền logic riêng biệt như động cơ, thân xe, phanh hoặc giải trí.
+    \item Kiểm soát giao tiếp giữa các miền bằng gateway có chức năng xác thực, lọc và kiểm tra thông điệp.
+\end{itemize}
+
+\textbf{Ví dụ.} Nếu vùng giải trí bị xâm nhập, gateway có thể ngăn kẻ tấn công tác động trực tiếp đến ECU điều khiển động cơ hoặc hệ thống phanh.
+
+\textbf{Ưu điểm.} Hạn chế phạm vi lây lan của tấn công khi một node bị chiếm quyền. Dễ kết hợp với các cơ chế lọc và kiểm soát truy cập.
+
+\textbf{Nhược điểm.} Làm tăng độ phức tạp trong thiết kế hệ thống. Đòi hỏi thêm phần cứng hoặc phần mềm trung gian.
+
+\subsection{Chữ ký số (Digital Signatures)}
+\textbf{Nguyên lý.} Chữ ký số sử dụng mật mã bất đối xứng để xác thực nguồn gốc và đảm bảo tính toàn vẹn của thông điệp.
+
+\textbf{Cách thực hiện.}
+\begin{itemize}[leftmargin=*]
+    \item Node gửi tạo chữ ký từ thông điệp và khóa bí mật của mình.
+    \item Node nhận dùng khóa công khai tương ứng để xác minh chữ ký.
+\end{itemize}
+
+\textbf{Ví dụ.} Với thông điệp $M$, node gửi tạo chữ ký $Sig = Sign_{K_{priv}}(M)$ và truyền cùng với $M$. Node nhận dùng $K_{pub}$ để kiểm tra $Verify_{K_{pub}}(M, Sig)$.
+
+\textbf{Ưu điểm.} Cho khả năng xác minh mạnh và đáng tin cậy. Không cần chia sẻ cùng một khóa bí mật giữa tất cả các node.
+
+\textbf{Nhược điểm.} Tốn nhiều tài nguyên và thời gian xử lý. Kích thước chữ ký thường lớn, dễ vượt giới hạn của CAN 2.0.
+
+\subsection{Giao thức bảo mật lớp cao (Higher-layer Security Protocols)}
+\textbf{Nguyên lý.} Các giao thức lớp ứng dụng được xây dựng để bổ sung khả năng bảo mật cho CAN mà không cần thay đổi hoàn toàn giao thức gốc.
+
+\textbf{Cách thực hiện.}
+\begin{itemize}[leftmargin=*]
+    \item \textit{SecOC (Secure Onboard Communication):} Thành phần trong AUTOSAR cung cấp cơ chế xác thực và kiểm tra toàn vẹn bằng cách gắn thêm thông tin bảo mật vào thông điệp.
+    \item \textit{CANcrypt:} Giao thức nhẹ hỗ trợ mã hóa luồng dữ liệu, xác thực và đồng bộ khóa tạm thời phù hợp với giới hạn của CAN 2.0.
+\end{itemize}
+
+\textbf{Ưu điểm.} Có thể triển khai trên nền hệ thống hiện có. Cung cấp bảo mật tương đối toàn diện, bao gồm xác thực, tính toàn vẹn và tính tươi mới của thông điệp.
+
+\textbf{Nhược điểm.} Yêu cầu đồng bộ trạng thái hoặc thời gian giữa các node. Tương đối phức tạp trong triển khai và bảo trì.

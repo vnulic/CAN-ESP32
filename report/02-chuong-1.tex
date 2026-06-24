@@ -1,0 +1,41 @@
+\chapter{Giới thiệu chung}
+
+\section{Bối cảnh}
+Trong kỷ nguyên của xe hơi hiện đại, các hệ thống điều khiển điện tử (ECU - Electronic Control Unit) đóng vai trò trung tâm trong việc điều phối nhiều chức năng khác nhau, từ điều hòa không khí, đèn pha cho đến các hệ thống phức tạp như hỗ trợ lái tự động (ADAS), chống bó cứng phanh (ABS), kiểm soát lực kéo (TCS) và túi khí (Airbag). Để các ECU này có thể giao tiếp hiệu quả, giao thức \textit{Controller Area Network} (CAN) được sử dụng như xương sống truyền thông nội bộ trong ô tô. CAN cung cấp cơ chế truyền thông đa điểm tốc độ cao, đáng tin cậy và có tính thời gian thực giữa các bộ điều khiển.
+
+Tuy nhiên, khi các phương tiện ngày càng trở nên kết nối nhiều hơn thông qua cổng OBD-II, Bluetooth, Wi-Fi, 4G/5G và cả cập nhật OTA, nguy cơ bị tấn công mạng cũng tăng lên đáng kể. Mặc dù CAN được thiết kế tối ưu cho độ tin cậy và tính thời gian thực, giao thức này không tích hợp sẵn các cơ chế bảo mật cơ bản như:
+
+\begin{itemize}[leftmargin=*]
+    \item Không có cơ chế xác thực giữa các node.
+    \item Không có mã hóa dữ liệu truyền trên bus.
+    \item Không có phân quyền truy cập giữa các thành phần tham gia mạng.
+\end{itemize}
+
+Do đó, kẻ tấn công chỉ cần có khả năng truy cập vật lý hoặc gián tiếp vào mạng CAN là đã có thể thực hiện các hành vi nguy hiểm như:
+
+\begin{itemize}[leftmargin=*]
+    \item Giả mạo gói tin (\textit{spoofing}) để điều khiển ECU trái phép.
+    \item Tấn công từ chối dịch vụ (\textit{DoS}) làm treo hoặc quá tải hệ thống.
+    \item Nghe lén dữ liệu (\textit{eavesdropping}) để phân tích hành vi của xe.
+\end{itemize}
+
+Trước bối cảnh đó, yêu cầu cấp thiết đặt ra là cần phát triển các giải pháp bảo mật cho mạng CAN. Trên thực tế, nhiều hướng tiếp cận đã được nghiên cứu và áp dụng, chẳng hạn như hệ thống phát hiện xâm nhập (IDS), mã hóa giao tiếp trên CAN hoặc phân tích hành vi bất thường trong quá trình vận hành.
+
+\section{Giải pháp}
+Trước các mối đe dọa an ninh mạng ngày càng gia tăng đối với hệ thống xe hơi, đặc biệt là với CAN bus, nhiều giải pháp bảo mật đã được nghiên cứu và triển khai trên toàn thế giới. Các giải pháp này tập trung vào việc phát hiện, ngăn chặn và giảm thiểu tác động của các cuộc tấn công vào hệ thống điện tử trên xe.
+
+Dưới đây là các nhóm giải pháp chính:
+
+\begin{enumerate}[label=\alph*., leftmargin=*]
+    \item \textbf{Hệ thống phát hiện xâm nhập (IDS - Intrusion Detection System):} IDS là một trong những hướng tiếp cận phổ biến nhất trong bảo mật mạng CAN. Hệ thống này giám sát dữ liệu truyền trên bus và tìm kiếm các dấu hiệu bất thường dựa trên phân tích thống kê tần suất gói tin, phân tích hành vi hoặc các kỹ thuật học máy để phân loại hoạt động hợp lệ và độc hại.
+
+    \item \textbf{Mã hóa dữ liệu truyền trên CAN bus:} Một số nghiên cứu đề xuất áp dụng kỹ thuật mã hóa nhẹ (\textit{lightweight encryption}) để bảo vệ nội dung gói tin truyền qua mạng CAN. Tuy nhiên, giải pháp này gặp nhiều thách thức do giới hạn băng thông của CAN và yêu cầu thời gian thực của hệ thống xe.
+
+    \item \textbf{Xác thực thông điệp (Message Authentication):} Thay vì chỉ mã hóa, một số giải pháp tập trung vào việc gắn mã xác thực hoặc chữ ký số nhẹ vào các gói tin CAN nhằm đảm bảo dữ liệu đến từ nguồn hợp lệ và chưa bị chỉnh sửa. Điều này đặc biệt hữu ích để chống lại các cuộc tấn công \textit{spoofing} và \textit{replay}.
+
+    \item \textbf{Giám sát hành vi dựa trên định thời (Timing-based Anomaly Detection):} Nhiều cuộc tấn công làm thay đổi chu kỳ truyền hoặc độ trễ của gói tin. Vì vậy, việc theo dõi thời gian truyền và kiểm tra sự bất thường trong mẫu định thời là một kỹ thuật hữu ích để phát hiện xâm nhập.
+
+ 
+\end{enumerate}
+
+Mặc dù nhiều giải pháp bảo mật mạng CAN đã được đề xuất và triển khai, không có giải pháp nào là hoàn hảo trong mọi bối cảnh. Hướng đi khả thi nhất hiện nay là kết hợp nhiều lớp bảo mật, từ mã hóa và xác thực đến phát hiện xâm nhập, đồng thời thiết kế hệ thống mạng thông minh và có phân vùng để nâng cao mức độ an toàn cho xe hơi hiện đại.

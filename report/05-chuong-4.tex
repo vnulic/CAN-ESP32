@@ -1,0 +1,264 @@
+\chapter{CAN trong ESP32}
+
+\reportsection{4.1 Tổng quan về giao tiếp CAN trên ESP32}
+
+ESP32 là dòng vi điều khiển SoC được sử dụng rộng rãi trong các hệ thống nhúng nhờ tích
+hợp đồng thời năng lực xử lý, kết nối không dây và nhiều ngoại vi truyền thông. Bên
+cạnh UART, SPI hay I2C, ESP32 còn cung cấp bộ điều khiển CAN cổ điển do Espressif đặt
+tên là TWAI (\textit{Two-Wire Automotive Interface}). Đây là nền tảng giúp ESP32 có thể
+tham gia trực tiếp vào một mạng CAN thử nghiệm mà không cần bổ sung thêm bộ điều
+khiển CAN rời.
+
+\reportsubsection{4.1.1 Bộ điều khiển TWAI}
+
+TWAI trên ESP32 đảm nhiệm lớp điều khiển giao thức của CAN. Khối này xử lý việc đóng
+gói khung dữ liệu, phân xử truy cập bus, tạo CRC, xác nhận ACK, theo dõi bộ đếm lỗi và
+quản lý các trạng thái truyền thông. Tuy nhiên, TWAI không tạo trực tiếp tín hiệu vi sai
+trên đường truyền, vì vậy vẫn cần thêm một CAN transceiver ở lớp vật lý để đưa tín hiệu
+ra hai đường CANH và CANL.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{4.2cm}|p{9.2cm}|}
+\hline
+\textbf{Thuộc tính} & \textbf{Mô tả} \\ \hline
+Chuẩn hỗ trợ & CAN cổ điển theo ISO 11898-1 \\ \hline
+Định dạng khung & Standard Frame với ID 11 bit và Extended Frame với ID 29 bit \\ \hline
+Dung lượng dữ liệu & Tối đa 8 byte dữ liệu trong mỗi khung \\ \hline
+Chức năng tích hợp & Arbitration, CRC, ACK, bộ đếm lỗi, quản lý bus-off và acceptance filter \\ \hline
+Khả năng gán chân & Cho phép ánh xạ TX và RX qua GPIO matrix của ESP32 \\ \hline
+Giới hạn & Không hỗ trợ CAN FD, do đó không sử dụng payload 64 byte \\ \hline
+\end{tabular}
+\caption{Đặc điểm chính của giao tiếp TWAI trên ESP32}
+\end{table}
+
+
+
+\reportsection{4.2 Kiến trúc một nút CAN dùng ESP32}
+
+Một nút CAN sử dụng ESP32 trong đề tài có thể được xem như sự kết hợp giữa khối xử lý
+giao thức ở bên trong vi điều khiển và khối phát thu tín hiệu ở bên ngoài. Việc tách rõ hai
+khối này đặc biệt quan trọng khi phân tích phần cứng, vì nhiều lỗi triển khai phát sinh từ
+nhầm lẫn giữa CAN controller và CAN transceiver.
+
+\reportsubsection{4.2.1 Vai trò của bộ điều khiển CAN}
+
+TWAI đóng vai trò bộ điều khiển CAN nội bộ. Khối này quyết định định dạng khung truyền,
+kiểm tra tính hợp lệ của ID, DLC và cờ điều khiển, đồng thời xử lý các cơ chế cốt lõi của
+CAN như tranh chấp bus theo mức ưu tiên ID hay tự động phát hiện lỗi. Ở góc nhìn phần
+mềm, đây là nơi firmware cấu hình tốc độ bit, chế độ hoạt động và chính sách lọc khung.
+
+\reportsubsection{4.2.2 Vai trò của bộ thu phát CAN}
+
+CAN transceiver là thành phần thuộc lớp vật lý. Nó nhận mức logic TX/RX từ ESP32 rồi
+biến đổi thành cặp tín hiệu vi sai CANH/CANL trên bus. Ở chiều ngược lại, transceiver lấy
+tín hiệu từ bus và đưa về mức logic để TWAI có thể giải mã. Nếu thiếu transceiver, ESP32
+không thể nối trực tiếp vào mạng CAN thực vì không tạo ra được điện áp và đặc tính chống
+nhiễu cần thiết của đường truyền vi sai.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    block/.style={draw, rectangle, minimum width=3.2cm, minimum height=1.1cm, align=center},
+    arrow/.style={->, thick}
+]
+\node[block] (esp) {ESP32\\TWAI Controller};
+\node[block, minimum width=4.2cm, right=2.2cm of esp] (trans) {CAN Transceiver\\ TJA1050};
+\node[block, minimum width=3.4cm, right=2.2cm of trans] (bus) {CAN Bus\\CANH -- CANL};
+
+\draw[arrow] (esp) -- node[midway, above, align=center, font=\small, fill=white, inner sep=1pt]{Tín hiệu\\TX/RX mức logic} (trans);
+\draw[arrow] (trans) -- node[midway, above, align=center, font=\small, fill=white, inner sep=1pt]{Tín hiệu\\vi sai} (bus);
+\end{tikzpicture}
+\caption{Sơ đồ khối của một nút CAN dùng ESP32}
+\end{figure}
+
+\reportsection{4.3 Kết nối phần cứng của mô hình}
+
+Trong mô hình thực nghiệm hiện tại, firmware mặc định sử dụng GPIO26 làm đường truyền
+CAN logic và GPIO27 làm đường nhận CAN logic. Hai chân này được nối với module
+transceiver ngoài để hình thành một nút CAN hoàn chỉnh.
+
+\reportsubsection{4.3.1 Ánh xạ chân tín hiệu}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|>{\raggedright\arraybackslash}p{3.2cm}|>{\raggedright\arraybackslash}p{2.4cm}|>{\raggedright\arraybackslash}p{3.2cm}|>{\raggedright\arraybackslash}p{4.2cm}|}
+\hline
+\textbf{Nhóm tín hiệu} & \textbf{ESP32} & \textbf{Transceiver} & \textbf{Vai trò} \\ \hline
+Truyền dữ liệu & GPIO26 & TXD & Đưa dữ liệu từ TWAI sang bộ thu phát \\ \hline
+Nhận dữ liệu & GPIO27 & RXD & Đưa dữ liệu từ bộ thu phát về TWAI \\ \hline
+Nguồn nuôi & 3.3 V hoặc 5 V & VCC & Phụ thuộc loại module transceiver sử dụng \\ \hline
+Mass chung & GND & GND & Tạo mốc điện áp chung cho toàn nút \\ \hline
+Đường bus & -- & CANH, CANL & Kết nối ra đường truyền vi sai của mạng CAN \\ \hline
+\end{tabular}
+\caption{Ánh xạ chân CAN trong mô hình ESP32 của đề tài}
+\end{table}
+
+\reportsection{4.4 Cấu trúc và nguyên lý hoạt động của TWAI}
+
+Khối TWAI trong ESP32 có thể được nhìn nhận như tập hợp của nhiều khối chức năng phối
+hợp với nhau để hoàn thành quá trình truyền thông CAN. Cách phân rã này giúp việc mô tả
+vai trò của phần cứng rõ ràng hơn và phù hợp với cách trình bày học thuật trong báo cáo.
+
+\reportsubsection{4.4.1 Các khối chức năng chính}
+
+\begin{itemize}[leftmargin=1.5cm, itemsep=0.6em]
+    \item Khối điều khiển chế độ hoạt động quyết định TWAI đang ở trạng thái truyền nhận
+    bình thường, chỉ nghe hoặc kiểm thử không cần ACK.
+    \item Khối định thời bit thiết lập tốc độ truyền và các tham số đồng bộ để mọi nút trên
+    bus có cùng nhịp giao tiếp.
+    \item Khối truyền chịu trách nhiệm phát khung lên bus, phối hợp với cơ chế arbitration
+    và theo dõi việc bản tin có được xác nhận thành công hay không.
+    \item Khối nhận lấy tín hiệu từ transceiver, giải mã thành khung CAN rồi chuyển dữ liệu
+    cho tầng driver phần mềm.
+    \item Khối acceptance filter loại bỏ hoặc cho phép các khung theo cấu hình tiếp nhận.
+    \item Khối quản lý lỗi duy trì các bộ đếm lỗi, phát hiện bus-off và hỗ trợ chẩn đoán khi
+    đường truyền gặp sự cố.
+\end{itemize}
+
+\reportsubsection{4.4.2 Quy trình khởi tạo và trao đổi dữ liệu}
+
+Ở mức tổng quát, một nút ESP32 tham gia mạng CAN thường đi qua các bước sau:
+
+\begin{enumerate}
+    \item Chọn cặp chân GPIO dùng cho đường TX và RX của TWAI.
+    \item Thiết lập tốc độ bit và cấu hình chế độ hoạt động phù hợp với vai trò của nút.
+    \item Đặt chính sách lọc khung để xác định phạm vi bản tin cần tiếp nhận.
+    \item Khởi động driver TWAI và đưa transceiver vào trạng thái sẵn sàng làm việc.
+    \item Thực hiện truyền hoặc nhận khung thông qua hàng đợi của driver.
+    \item Theo dõi trạng thái lỗi để kịp thời xử lý khi bus xuất hiện bất thường.
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    node distance=1.15cm,
+    block/.style={draw, rectangle, rounded corners, minimum width=8.0cm, minimum height=0.85cm, align=center},
+    arrow/.style={->, thick}
+]
+\node[block] (s1) {Chọn chân TX/RX và kết nối với transceiver};
+\node[block, below of=s1] (s2) {Thiết lập tốc độ bit, chế độ hoạt động và bộ lọc khung};
+\node[block, below of=s2] (s3) {Khởi động TWAI và đưa nút vào trạng thái sẵn sàng};
+\node[block, below of=s3] (s4) {Truyền hoặc nhận bản tin CAN trên bus};
+\node[block, below of=s4] (s5) {Kiểm tra trạng thái lỗi và cập nhật xử lý tầng trên};
+
+\draw[arrow] (s1) -- (s2);
+\draw[arrow] (s2) -- (s3);
+\draw[arrow] (s3) -- (s4);
+\draw[arrow] (s4) -- (s5);
+\end{tikzpicture}
+\caption{Quy trình tổng quát khi khởi tạo và vận hành TWAI trên ESP32}
+\end{figure}
+
+\reportsection{4.5 Các tham số cấu hình quan trọng}
+
+Để một nút ESP32 giao tiếp ổn định trên bus CAN, một số tham số cấu hình có ý nghĩa quyết
+định gồm chế độ hoạt động, tốc độ bit và chính sách lọc khung. Đây cũng là ba nhóm tham
+số ảnh hưởng trực tiếp đến việc nút được dùng như ECU mô phỏng, nút tấn công hay nút
+giám sát trong hệ thống CyberCAN Defense.
+
+\reportsubsection{4.5.1 Chế độ hoạt động}
+
+\begin{itemize}
+    \item \textbf{Normal mode:} nút có thể truyền, nhận và phản hồi ACK như một thành
+    phần hoạt động bình thường trên bus.
+    \item \textbf{No ACK mode:} hữu ích khi kiểm thử đơn lẻ trong môi trường chưa có nút
+    khác xác nhận bản tin, nhưng không phù hợp cho vận hành thực tế.
+    \item \textbf{Listen Only mode:} nút chỉ nghe bus, không phát bản tin và không gửi ACK,
+    phù hợp với vai trò giám sát hoặc IDS vì không làm thay đổi lưu lượng trên bus.
+\end{itemize}
+
+Trong phạm vi đề tài, Normal mode phù hợp với các nút đóng vai trò ECU mô phỏng hoặc
+nút phát tấn công, còn Listen Only mode phù hợp với các nút chuyên quan sát và thu thập
+log để phân tích.
+
+\reportsubsection{4.5.2 Tốc độ bit và sự đồng bộ trên bus}
+
+Tất cả các nút trên cùng bus CAN phải sử dụng cùng tốc độ bit; nếu không, bản tin sẽ
+không được giải mã đúng và mạng nhanh chóng phát sinh lỗi. Một số tốc độ thường gặp
+được trình bày trong Bảng 4.3.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{3cm}|p{9.6cm}|}
+\hline
+\textbf{Tốc độ bit} & \textbf{Ý nghĩa sử dụng} \\ \hline
+125 kbps & Phù hợp với mạng tốc độ thấp hoặc đường truyền dài hơn \\ \hline
+250 kbps & Thường dùng trong các mô hình nhúng và công nghiệp quy mô nhỏ \\ \hline
+500 kbps & Cân bằng giữa tốc độ và độ ổn định, phù hợp với mô hình thí nghiệm của đề tài \\ \hline
+1 Mbps & Dùng cho môi trường cự ly ngắn, yêu cầu băng thông cao hơn \\ \hline
+\end{tabular}
+\caption{Một số tốc độ bit CAN thường gặp}
+\end{table}
+
+Mô hình CyberCAN Defense lựa chọn 500 kbps vì đây là mức cấu hình phổ biến, đủ nhanh
+để tái hiện các tình huống tấn công như replay hay flood, đồng thời vẫn ổn định với hệ
+thống dây nối ngắn trên bàn thí nghiệm.
+
+\reportsubsection{4.5.3 Bộ lọc khung và phạm vi tiếp nhận}
+
+Trên bus CAN, mọi nút đều nhìn thấy toàn bộ bản tin đang lưu thông nhưng không phải nút
+nào cũng cần xử lý tất cả các ID. Acceptance filter giúp giảm tải cho vi điều khiển bằng
+cách giới hạn những khung được đưa lên tầng phần mềm. Nếu mục tiêu là xây dựng IDS
+hoặc node giám sát, chính sách lọc rộng hoặc nhận toàn bộ khung là cần thiết để giữ trọn
+ngữ cảnh của lưu lượng. Ngược lại, với một ECU mô phỏng chỉ phục vụ số ít ID xác định,
+lọc chặt hơn sẽ giúp giảm số lượng bản tin không liên quan.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{4cm}|p{8.6cm}|}
+\hline
+\textbf{Vai trò nút} & \textbf{Định hướng cấu hình tiếp nhận} \\ \hline
+ECU mô phỏng & Ưu tiên tiếp nhận các ID phục vụ chức năng mô phỏng chính \\ \hline
+Nút tấn công & Có thể tiếp nhận rộng để quan sát và khai thác lại lưu lượng hợp lệ \\ \hline
+Nút giám sát hoặc IDS & Nên tiếp nhận toàn bộ hoặc gần toàn bộ khung để bảo toàn ngữ cảnh phân tích \\ \hline
+\end{tabular}
+\caption{Định hướng lọc khung theo vai trò nút trong hệ thống}
+\end{table}
+
+\reportsection{4.6 Truyền nhận và xử lý lỗi trên ESP32}
+
+\reportsubsection{4.6.1 Quá trình truyền và nhận khung}
+
+Ở phía truyền, firmware chuẩn bị bản tin bằng cách xác định ID, độ dài dữ liệu, kiểu khung
+và nội dung payload trước khi đưa vào hàng đợi của driver. Bộ điều khiển TWAI sau đó
+thực hiện phát bản tin lên bus và tự động tham gia cơ chế arbitration nếu cùng lúc có nhiều
+nút muốn truyền. Ở phía nhận, các khung hợp lệ được giải mã và chuyển vào hàng đợi nhận
+để phần mềm tầng trên đọc ra xử lý. Cách tổ chức này đặc biệt phù hợp với hệ thống có
+nhiều tác vụ đồng thời như đề tài hiện tại, nơi việc truyền bản tin, phát hiện tấn công và gửi
+log có thể diễn ra song song.
+
+Trong CAN cổ điển, một khung dữ liệu có thể dùng Standard ID 11 bit hoặc Extended ID
+29 bit. Việc lựa chọn kiểu ID cần được thống nhất ngay từ giai đoạn thiết kế hệ thống để
+tránh sai khác khi các nút giao tiếp chéo với nhau.
+
+\reportsubsection{4.6.2 Quản lý lỗi và trạng thái bus}
+
+Một ưu điểm lớn của CAN là cơ chế phát hiện và cô lập lỗi ngay tại mức bộ điều khiển.
+TWAI duy trì các bộ đếm lỗi truyền và nhận; khi lỗi tăng cao, nút có thể chuyển qua các
+trạng thái như \textit{error warning}, \textit{error passive} hoặc \textit{bus-off}. Những trạng
+thái này rất quan trọng trong thực nghiệm vì chúng phản ánh trực tiếp chất lượng kết nối
+và độ đúng của cấu hình phần cứng.
+
+Các nguyên nhân thường gây lỗi trong mô hình ESP32 gồm:
+
+\begin{itemize}[leftmargin=1.5cm, itemsep=0.6em]
+    \item Sai tốc độ bit giữa các nút trên cùng bus.
+    \item Chỉ có một nút hoạt động nên không có thiết bị ACK bản tin.
+    \item Đấu ngược CANH và CANL hoặc không nối mass chung.
+    \item Cấp nguồn sai cho transceiver hoặc dùng mức logic không tương thích với ESP32.
+    \item Dây nối quá dài, tiếp xúc kém hoặc môi trường có nhiễu cao.
+\end{itemize}
+
+Trong quá trình triển khai, việc theo dõi trạng thái lỗi của TWAI giúp nhóm xác định nhanh
+vấn đề đang nằm ở cấu hình tốc độ, lớp vật lý hay logic xử lý tầng trên. Phần hiện thực
+firmware và cơ chế chẩn đoán cụ thể được trình bày ở Chương 5.
+
+\reportsection{4.9 Kết luận}
+
+TWAI giúp ESP32 trở thành một nền tảng phù hợp để xây dựng các nút CAN thử nghiệm
+trong đề tài CyberCAN Defense. Mặc dù không hỗ trợ CAN FD và vẫn phải kết hợp với
+transceiver ngoài, ESP32 vẫn đáp ứng tốt yêu cầu mô phỏng ECU, thu thập lưu lượng, phát
+động tấn công và hỗ trợ phân tích an ninh trên bus CAN. Việc hiểu rõ kiến trúc TWAI, yêu
+cầu phần cứng và cơ chế xử lý lỗi là cơ sở quan trọng để triển khai đúng hệ thống được mô
+tả ở các chương tiếp theo.

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAN Simulator Pro</title>
+    <link rel="stylesheet" href="styles.css?v=20260621-3">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="app-container">
+        <header class="app-header">
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z"></path>
+                </svg>
+                <h1>CAN Simulator Pro</h1>
+            </div>
+        </header>
+
+        <div class="app-body">
+            
+            <aside class="app-sidebar">
+                <button id="add-node-btn" class="btn primary full-width" style="margin-bottom: 16px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    Add Node
+                </button>
+                
+                <div class="sidebar-section-title">CONNECTED NODES</div>
+                
+                <ul class="node-list" id="sidebar-node-list">
+                    </ul>
+            </aside>
+
+            <main class="app-workspace" id="nodes-container">
+            </main>
+
+            <aside class="app-rightbar" id="global-controls">
+                <div class="rightbar-header">
+                    <h2 id="active-node-name">No Node Selected</h2>
+                    <span id="active-node-port" class="node-port"></span>
+                </div>
+
+                <div class="controls-container">
+                    <div class="send-form-container panel-box">
+                        <form class="send-form" id="global-send-form">
+                            <div class="form-row">
+                                <div class="form-group sm">
+                                    <label>CAN ID</label>
+                                    <input type="text" id="global-send-id" placeholder="0x123" required>
+                                </div>
+                                <div class="form-group xs">
+                                    <label>DLC</label>
+                                    <input type="number" id="global-send-dlc" value="8" min="0" max="8" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Data (Hex space-separated)</label>
+                                <input type="text" id="global-send-data" placeholder="01 02 0A FF" required>
+                            </div>
+                            <button type="submit" class="btn primary full-width">Send Message</button>
+                        </form>
+                    </div>
+
+                    <div class="security-panel panel-box" id="global-security-panel">
+                        <div class="panel-header">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                            Security Attacks
+                        </div>
+                        
+                        <div class="attack-tabs">
+                            <button type="button" class="attack-tab active" data-target="dos">DoS</button>
+                            <button type="button" class="attack-tab" data-target="repeat">Repeat</button>
+                            <button type="button" class="attack-tab" data-target="replay">Replay</button>
+                            <button type="button" class="attack-tab" data-target="fuzz">Fuzz</button>
+                            <button type="button" class="attack-tab" data-target="spoof">Spoof</button>
+                        </div>
+
+                        <div class="attack-tab-content active" data-tab="dos">
+                            <form class="attack-form" id="global-dos-form">
+                                <div class="attack-grid dos">
+                                    <div class="form-group">
+                                        <label>CAN ID</label>
+                                        <input type="text" class="atk-id" placeholder="0x123" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Period (ms)</label>
+                                        <input type="number" class="atk-period" value="20" required>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn warning-outline full-width atk-btn" data-type="dos">Start DoS</button>
+                            </form>
+                        </div>
+
+                        <div class="attack-tab-content" data-tab="repeat">
+                            <form class="attack-form" id="global-repeat-form">
+                                <div class="attack-grid">
+                                    <div class="form-group"><label>ID</label><input type="text" class="atk-id" placeholder="0x12" required></div>
+                                    <div class="form-group"><label>DLC</label><input type="number" class="atk-dlc" value="8" max="8" min="0" required></div>
+                                    <div class="form-group"><label>ms</label><input type="number" class="atk-period" value="100" required></div>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0.75rem;">
+                                    <label>Data (Hex space-separated)</label>
+                                    <input type="text" class="atk-data" placeholder="01 02 0A FF" required>
+                                </div>
+                                <button type="submit" class="btn warning-outline full-width atk-btn" data-type="repeat">Start Repeat</button>
+                            </form>
+                        </div>
+
+                        <div class="attack-tab-content" data-tab="replay">
+                            <form class="attack-form" id="global-replay-form">
+                                <div class="form-group" style="margin-bottom: 0.75rem;">
+                                    <label>Replay Period (ms)</label>
+                                    <input type="number" class="atk-period" value="250" required>
+                                </div>
+                                <button type="submit" class="btn warning-outline full-width atk-btn" data-type="replay">Start Replay</button>
+                            </form>
+                        </div>
+
+                        <div class="attack-tab-content" data-tab="fuzz">
+                            <form class="attack-form" id="global-fuzz-form">
+                                <div class="form-group" style="margin-bottom: 0.75rem;">
+                                    <label>Fuzz Period (ms)</label>
+                                    <input type="number" class="atk-period" value="35" required>
+                                </div>
+                                <button type="submit" class="btn warning-outline full-width atk-btn" data-type="fuzz">Start Fuzzing</button>
+                            </form>
+                        </div>
+
+                        <div class="attack-tab-content" data-tab="spoof">
+                            <form class="attack-form" id="global-spoof-form">
+                                <div class="attack-grid dos">
+                                    <div class="form-group"><label>ms</label><input type="number" class="atk-period" value="120" required></div>
+                                </div>
+                                <button type="submit" class="btn warning-outline full-width atk-btn" data-type="spoof">Start Spoof</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="defense-panel panel-box" id="global-defense-panel">
+                        <div class="panel-header">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                            Manual Defense
+                        </div>
+                        <div class="defense-status" id="global-defense-status">Defense idle</div>
+                        <div class="form-group">
+                            <label>Block Duration (ms)</label>
+                            <input type="number" id="global-defense-duration" value="10000" min="1000" max="600000" step="1000">
+                        </div>
+                        <div class="defense-actions" style="display: flex; gap: 8px;">
+                            <button type="button" class="btn primary" id="global-defense-on-btn" style="flex: 1;">Activate</button>
+                            <button type="button" class="btn secondary" id="global-defense-status-btn">Status</button>
+                            <button type="button" class="btn secondary" id="global-defense-off-btn">Clear</button>
+                        </div>
+                    </div>
+                </div> 
+            </aside>
+        </div>
+    </div>
+
+    <div class="modal-backdrop" id="add-node-modal" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Add New Node</h2>
+                <button class="close-btn" id="close-modal-btn">&times;</button>
+            </div>
+            <form id="add-node-form">
+                <div class="form-group">
+                    <label for="node-name">Node Name</label>
+                    <input type="text" id="node-name" placeholder="e.g. Engine ECU" required>
+                </div>
+                <div class="form-group">
+                    <label for="node-port">COM Port</label>
+                    <input type="text" id="node-port" placeholder="e.g. COM3 or /dev/ttyUSB0" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn secondary" id="cancel-node-btn">Cancel</button>
+                    <button type="submit" class="btn primary" id="save-node-btn">Connect</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<template id="node-card-template">
+        <div class="node-card">
+            <div class="card-header">
+                <div class="node-status-indicator"></div>
+                <div class="node-name"></div>
+                <div class="node-port"></div>
+            </div>
+            
+            <div class="node-body">
+                <div class="messages-container">
+                    <div class="messages-list"></div>
+                </div>
+            </div>
+        </div>
+    </template>
+    <script src="app.js?v=20260621-6"></script>
+</body>
+</html>
