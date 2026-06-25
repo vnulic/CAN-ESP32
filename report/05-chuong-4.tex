@@ -132,13 +132,16 @@ vai trò của phần cứng rõ ràng hơn và phù hợp với cách trình b�
 \begin{tikzpicture}[
     node distance=1.15cm,
     block/.style={draw, rectangle, rounded corners, minimum width=8.0cm, minimum height=0.85cm, align=center},
+    setupblock/.style={block, fill=blue!12},
+    startblock/.style={block, fill=green!12},
+    runblock/.style={block, fill=yellow!15},
     arrow/.style={->, thick}
 ]
-\node[block] (s1) {Chọn chân TX/RX và kết nối với transceiver};
-\node[block, below of=s1] (s2) {Thiết lập tốc độ bit, chế độ hoạt động và bộ lọc khung};
-\node[block, below of=s2] (s3) {Khởi động TWAI và đưa nút vào trạng thái sẵn sàng};
-\node[block, below of=s3] (s4) {Truyền hoặc nhận bản tin CAN trên bus};
-\node[block, below of=s4] (s5) {Kiểm tra trạng thái lỗi và cập nhật xử lý tầng trên};
+\node[setupblock] (s1) {Chọn chân TX/RX và kết nối với transceiver};
+\node[setupblock, below of=s1] (s2) {Thiết lập tốc độ bit, chế độ hoạt động và bộ lọc khung};
+\node[startblock, below of=s2] (s3) {Khởi động TWAI và đưa nút vào trạng thái sẵn sàng};
+\node[runblock, below of=s3] (s4) {Truyền hoặc nhận bản tin CAN trên bus};
+\node[runblock, below of=s4] (s5) {Kiểm tra trạng thái lỗi và cập nhật xử lý tầng trên};
 
 \draw[arrow] (s1) -- (s2);
 \draw[arrow] (s2) -- (s3);
@@ -183,6 +186,7 @@ không được giải mã đúng và mạng nhanh chóng phát sinh lỗi. Mộ
 \textbf{Tốc độ bit} & \textbf{Ý nghĩa sử dụng} \\ \hline
 125 kbps & Phù hợp với mạng tốc độ thấp hoặc đường truyền dài hơn \\ \hline
 250 kbps & Thường dùng trong các mô hình nhúng và công nghiệp quy mô nhỏ \\ \hline
+\rowcolor{red!20}
 500 kbps & Cân bằng giữa tốc độ và độ ổn định, phù hợp với mô hình thí nghiệm của đề tài \\ \hline
 1 Mbps & Dùng cho môi trường cự ly ngắn, yêu cầu băng thông cao hơn \\ \hline
 \end{tabular}

@@ -25,31 +25,41 @@ Kết quả của dự án cho thấy cách tiếp cận phát hiện bất thư
 
 \section{Ứng dụng Trí tuệ Nhân tạo (AI)}
 
-Trong quá trình thực hiện dự án CyberCAN Defense, nhóm đã sử dụng các công cụ Trí tuệ Nhân tạo (AI) như một công cụ hỗ trợ nghiên cứu, thiết kế hệ thống, phát triển phần mềm và xây dựng tài liệu kỹ thuật. AI được ứng dụng trong nhiều giai đoạn khác nhau của dự án nhằm nâng cao hiệu quả làm việc, rút ngắn thời gian nghiên cứu và hỗ trợ giải quyết các vấn đề kỹ thuật phức tạp.
+Trong quá trình thực hiện dự án CyberCAN Defense: Phát hiện và Phòng thủ Xâm nhập Mạng Nội bộ Ô tô, nhóm đã sử dụng nhiều công cụ Trí tuệ Nhân tạo (AI) khác nhau nhằm hỗ trợ nghiên cứu, thiết kế hệ thống, phát triển phần mềm và xây dựng tài liệu kỹ thuật. Mỗi công cụ được sử dụng cho những mục đích khác nhau dựa trên thế mạnh riêng, bao gồm ChatGPT, Claude và Prism AI. Việc kết hợp các công cụ AI đã giúp nhóm rút ngắn thời gian nghiên cứu, nâng cao hiệu quả làm việc và hỗ trợ giải quyết nhiều vấn đề kỹ thuật trong quá trình thực hiện đề tài.
 
-\subsection{Hỗ trợ nghiên cứu và tìm hiểu công nghệ}
+\subsection{Ứng dụng ChatGPT trong nghiên cứu và thiết kế hệ thống}
 
-Trong giai đoạn tìm hiểu kiến thức nền tảng, AI hỗ trợ giải thích các khái niệm liên quan đến giao thức CAN Bus, kiến trúc TWAI của ESP32, nguyên lý hoạt động của bộ chuyển đổi CAN TJA1050, cơ chế Arbitration, Error Handling cũng như các hình thức tấn công phổ biến trên mạng CAN như Replay Attack, Spoofing Attack, Denial of Service (DoS) và Fuzzing Attack. Thông qua các cuộc trao đổi với AI, nhóm có thể nhanh chóng tiếp cận các kiến thức mới, xác định từ khóa nghiên cứu phù hợp và định hướng tìm kiếm các tài liệu chuyên ngành liên quan.
+ChatGPT được sử dụng chủ yếu trong giai đoạn nghiên cứu lý thuyết, tìm hiểu công nghệ và hỗ trợ thiết kế hệ thống. Trong quá trình tìm hiểu kiến thức nền tảng, ChatGPT hỗ trợ giải thích các khái niệm liên quan đến giao thức CAN Bus, cấu trúc CAN Frame, cơ chế Arbitration, Error Detection, Error Handling, Bit Stuffing cũng như nguyên lý hoạt động của bộ điều khiển TWAI trên ESP32 và bộ chuyển đổi CAN TJA1050.
 
-\subsection{Hỗ trợ thiết kế hệ thống}
+Bên cạnh đó, ChatGPT còn được sử dụng để tìm hiểu các nội dung chuyên sâu về an ninh mạng ô tô, bao gồm các hình thức tấn công phổ biến trên mạng CAN như Replay Attack, Spoofing Attack, Denial of Service (DoS), Fuzzing Attack, Message Injection Attack và các phương pháp phát hiện xâm nhập đang được sử dụng trong các hệ thống IDS hiện đại. Công cụ này giúp nhóm tiếp cận nhanh với các kiến thức mới, giải thích các thuật ngữ chuyên ngành và đề xuất các hướng nghiên cứu phù hợp với phạm vi của đề tài.
 
-AI được sử dụng để hỗ trợ xây dựng kiến trúc tổng thể của hệ thống CyberCAN Defense. Từ các ý tưởng ban đầu, AI hỗ trợ đề xuất sơ đồ khối hệ thống, sơ đồ luồng dữ liệu, lưu đồ thuật toán và mô hình kết nối giữa các thành phần như ESP32, TJA1050, CAN Bus, Node Attacker, Node Defender và giao diện Web Monitoring. Ngoài ra, AI còn hỗ trợ tạo các hình ảnh minh họa, sơ đồ kiến trúc và các bản phác thảo phục vụ cho quá trình thiết kế, giúp nhóm đánh giá và lựa chọn phương án triển khai phù hợp.
-án
-\subsection{Hỗ trợ phát triển và kiểm thử phần mềm}
+Trong giai đoạn thiết kế hệ thống, ChatGPT hỗ trợ xây dựng kiến trúc tổng thể của dự án, đề xuất các phương án kết nối giữa ESP32, TJA1050, CAN Bus, Node Attacker, Node Defender và giao diện Web Monitoring. Công cụ cũng hỗ trợ xây dựng sơ đồ khối hệ thống, sơ đồ luồng dữ liệu, lưu đồ thuật toán và các sơ đồ minh họa phục vụ cho quá trình thiết kế và trình bày báo cáo. Ngoài ra, ChatGPT còn hỗ trợ giải thích kiến trúc AUTOSAR, phân tích mối liên hệ giữa dự án CyberCAN Defense và các thành phần trong AUTOSAR Classic Platform, từ đó giúp nhóm xây dựng phần đánh giá và định hướng phát triển của hệ thống theo các tiêu chuẩn công nghiệp.
 
-Trong quá trình lập trình, AI đóng vai trò như một trợ lý kỹ thuật hỗ trợ giải thích thư viện, đề xuất cấu trúc chương trình và hỗ trợ xây dựng các module chức năng như truyền nhận CAN Frame, Web Server, WebSocket và hệ thống giám sát thời gian thực. Khi gặp các lỗi biên dịch hoặc lỗi logic, AI được sử dụng để phân tích nguyên nhân và đề xuất các hướng khắc phục. Bên cạnh đó, AI còn hỗ trợ tối ưu hóa mã nguồn và đề xuất các phương pháp tổ chức chương trình nhằm nâng cao tính ổn định của hệ thống.
+Trong quá trình xây dựng báo cáo, ChatGPT được sử dụng để hỗ trợ tổng hợp thông tin từ nhiều nguồn tài liệu, giải thích các khái niệm kỹ thuật, đề xuất nội dung cho các chương báo cáo và hỗ trợ chuẩn hóa cách diễn đạt theo phong cách học thuật.
 
-Trong giai đoạn kiểm thử, AI hỗ trợ phân tích dữ liệu CAN Bus, xử lý các bản ghi sự kiện, đề xuất các kịch bản tấn công cần mô phỏng và hỗ trợ đánh giá kết quả thực nghiệm. Điều này giúp nhóm rút ngắn thời gian xử lý dữ liệu và nâng cao hiệu quả đánh giá hệ thống.
+\subsection{Ứng dụng Claude trong phát triển và kiểm thử phần mềm}
 
-\subsection{Hỗ trợ xây dựng cơ chế phát hiện tấn công}
+Claude được sử dụng chủ yếu trong quá trình phát triển phần mềm và xử lý các vấn đề liên quan đến mã nguồn. Công cụ hỗ trợ giải thích cách sử dụng các thư viện lập trình trên ESP32, đề xuất cấu trúc chương trình và hỗ trợ xây dựng các module chức năng như truyền nhận CAN Frame, Web Server, WebSocket, giao diện giám sát thời gian thực và các cơ chế phát hiện tấn công.
 
-Đối với nội dung an ninh mạng ô tô, AI được sử dụng để tham khảo các phương pháp phát hiện xâm nhập như Rule-Based Detection, Frequency-Based Detection, Counter Verification, Anomaly Detection và các phương pháp ứng dụng Machine Learning trong hệ thống IDS. Từ các gợi ý này, nhóm đã lựa chọn và xây dựng cơ chế phát hiện phù hợp với khả năng xử lý của ESP32 cũng như phạm vi của đề tài. AI cũng hỗ trợ phân tích các kịch bản tấn công và đánh giá các điểm yếu bảo mật của mạng CAN truyền thống.
+Trong quá trình lập trình, Claude được sử dụng để hỗ trợ phân tích lỗi biên dịch, lỗi logic và các vấn đề phát sinh trong quá trình truyền nhận dữ liệu CAN. Công cụ hỗ trợ giải thích nguyên nhân gây lỗi, đề xuất các phương pháp khắc phục và đưa ra các gợi ý tối ưu hóa mã nguồn nhằm nâng cao tính ổn định của hệ thống. Đối với các thuật toán phát hiện tấn công, Claude hỗ trợ phân tích tính hợp lý của các điều kiện phát hiện, đánh giá độ hiệu quả của từng phương pháp và đề xuất các cải tiến phù hợp với khả năng xử lý của ESP32.
 
-\subsection{Hỗ trợ xây dựng báo cáo và thuyết trình}
+Trong giai đoạn kiểm thử, Claude được sử dụng để hỗ trợ xây dựng các kịch bản mô phỏng tấn công, đề xuất các trường hợp thử nghiệm và hỗ trợ phân tích dữ liệu CAN thu thập được trong quá trình thực nghiệm. Công cụ cũng hỗ trợ kiểm tra tính nhất quán của mã nguồn, rà soát các lỗi tiềm ẩn và đánh giá hiệu quả hoạt động của hệ thống IDS trước các tình huống tấn công khác nhau.
 
-AI được sử dụng để hỗ trợ chuẩn hóa văn phong kỹ thuật, kiểm tra lỗi chính tả, đề xuất cấu trúc chương mục, hỗ trợ soạn thảo tài liệu bằng LaTeX và xây dựng các hình minh họa phục vụ báo cáo. Ngoài ra, AI còn hỗ trợ thiết kế slide thuyết trình, xây dựng sơ đồ trực quan và đề xuất cách trình bày nội dung một cách khoa học và dễ hiểu hơn.
+Ngoài ra, Claude còn được sử dụng để hỗ trợ xây dựng và hiệu chỉnh mã nguồn cho các thành phần Web Monitoring, xử lý dữ liệu thời gian thực và các chức năng hỗ trợ người dùng trong quá trình quan sát trạng thái mạng CAN.
 
-Nhờ việc ứng dụng AI trong nhiều giai đoạn khác nhau của dự án, nhóm đã nâng cao hiệu quả nghiên cứu, đẩy nhanh tiến độ phát triển hệ thống và cải thiện chất lượng tài liệu kỹ thuật. Tuy nhiên, AI chỉ đóng vai trò là công cụ hỗ trợ. Mọi quyết định về thiết kế hệ thống, lựa chọn giải pháp kỹ thuật, triển khai phần cứng, phát triển phần mềm, thực hiện thí nghiệm và đánh giá kết quả cuối cùng đều do các thành viên trong nhóm trực tiếp thực hiện và chịu trách nhiệm.
+\subsection{Ứng dụng Prism AI trong xây dựng tài liệu và thuyết trình}
+
+Prism AI được sử dụng chủ yếu trong quá trình xây dựng báo cáo và chuẩn hóa tài liệu kỹ thuật. Công cụ hỗ trợ kiểm tra chính tả, ngữ pháp và tính nhất quán của nội dung, đồng thời đề xuất các cách diễn đạt phù hợp với văn phong học thuật và kỹ thuật.
+
+Trong quá trình biên soạn báo cáo bằng LaTeX, Prism AI hỗ trợ xây dựng cấu trúc chương mục, đề xuất cách tổ chức nội dung, định dạng bảng biểu, hình ảnh và các thành phần trình bày khác nhằm nâng cao tính trực quan của tài liệu. Công cụ cũng hỗ trợ rà soát lỗi định dạng, đề xuất các cải tiến về bố cục và đảm bảo tính thống nhất giữa các chương trong báo cáo.
+
+Bên cạnh đó, Prism AI còn được sử dụng để hỗ trợ xây dựng nội dung thuyết trình, đề xuất bố cục slide, cách trình bày các sơ đồ kỹ thuật, biểu đồ và các nội dung minh họa nhằm giúp quá trình trình bày đề tài trở nên rõ ràng và dễ tiếp cận hơn.
+
+\subsection{Đánh giá hiệu quả sử dụng AI trong dự án}
+
+Việc kết hợp ChatGPT, Claude và Prism AI trong các giai đoạn khác nhau của dự án đã giúp nhóm nâng cao hiệu quả nghiên cứu, đẩy nhanh tiến độ phát triển hệ thống và cải thiện chất lượng tài liệu kỹ thuật. ChatGPT hỗ trợ mạnh trong việc nghiên cứu lý thuyết, thiết kế kiến trúc và xây dựng sơ đồ; Claude hỗ trợ hiệu quả trong phát triển phần mềm, phân tích lỗi và kiểm thử hệ thống; trong khi Prism AI hỗ trợ chuẩn hóa báo cáo và nâng cao chất lượng trình bày tài liệu.
+
+Tuy nhiên, các công cụ AI chỉ đóng vai trò hỗ trợ trong quá trình thực hiện đề tài. Mọi quyết định về lựa chọn kiến trúc hệ thống, triển khai phần cứng, phát triển phần mềm, xây dựng cơ chế phát hiện tấn công, thực hiện thí nghiệm và đánh giá kết quả cuối cùng đều do các thành viên trong nhóm trực tiếp thực hiện và chịu trách nhiệm.
 \section{Liên hệ với kiến trúc phần mềm AUTOSAR}
 
 \subsection{Tổng quan về AUTOSAR}
@@ -122,5 +132,3 @@ Trong tương lai, hệ thống có thể được mở rộng bằng cách tri�
     \item \textbf{Mở rộng mô hình phần cứng:} Thử nghiệm với nhiều nút hơn, nhiều loại tải hơn hoặc gateway trung gian để mô phỏng gần hơn kiến trúc mạng trong ô tô thực.
     \item \textbf{Hướng đến hệ thống đa giao thức:} Bên cạnh CAN, có thể mở rộng nghiên cứu sang LIN, CAN FD, FlexRay hoặc Automotive Ethernet để hình thành cách tiếp cận bảo mật toàn diện hơn.
 \end{itemize}
-
-Với xu hướng phát triển mạnh của ô tô điện, xe kết nối và các hệ thống điều khiển ngày càng thông minh, bảo mật mạng truyền thông trong xe sẽ tiếp tục là yêu cầu quan trọng. Đề tài CyberCAN Defense là bước khởi đầu tốt để nhóm tiếp tục phát triển các mô hình bảo mật nhúng gắn với phần cứng và mã nguồn do chính nhóm làm chủ.
