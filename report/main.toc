@@ -1,7 +1,7 @@
 \contentsline {chapter}{Lời cam đoan}{i}{chapter*.1}%
 \contentsline {chapter}{Lời cảm ơn}{ii}{chapter*.2}%
-\contentsline {chapter}{Danh sách hình ảnh}{vii}{chapter*.3}%
-\contentsline {chapter}{Danh sách liên kết}{viii}{chapter*.5}%
+\contentsline {chapter}{Danh sách hình ảnh}{vi}{chapter*.3}%
+\contentsline {chapter}{Danh sách liên kết}{vii}{chapter*.5}%
 \contentsline {chapter}{Lời mở đầu}{1}{chapter*.6}%
 \contentsline {chapter}{\numberline {1}Giới thiệu chung}{2}{chapter.1}%
 \contentsline {section}{\numberline {1.1}Bối cảnh}{2}{section.1.1}%
@@ -76,4 +76,5 @@
 \contentsline {subsection}{\numberline {7.3.1}Tổng quan về AUTOSAR}{40}{subsection.7.3.1}%
 \contentsline {subsection}{\numberline {7.3.2}Khả năng tích hợp AUTOSAR với dự án}{40}{subsection.7.3.2}%
 \contentsline {section}{\numberline {7.4}Hướng phát triển trong tương lai}{41}{section.7.4}%
+\enlargethispage {2\baselineskip }
 \contentsline {chapter}{Tài liệu tham khảo}{43}{chapter*.44}%
