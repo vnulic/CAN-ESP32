@@ -31,6 +31,8 @@ nodes = {}
 connected_clients = []
 observed_frames = {}
 
+AUTO_DEFENSE_DEFAULT_DURATION_MS = 10000
+
 
 async def emit_log(node_id: str, tag: str, message: str):
     timestamp = int(time.time() * 1000) % 1000000
@@ -224,7 +226,7 @@ def build_spoof_payload(msg_id=None, preferred_node_id=None):
     }
 
 
-def update_node_alert_state_from_log(node_id: str, line: str):
+async def update_node_alert_state_from_log(node_id: str, line: str):
     node = nodes.get(node_id)
     if not node:
         return
@@ -267,6 +269,8 @@ def update_node_alert_state_from_log(node_id: str, line: str):
     id_match = re.search(r"ID=(0x[0-9A-Fa-f]+)", line)
     if id_match:
         defense["last_alert_id"] = normalize_can_id(id_match.group(1))
+
+    await maybe_auto_activate_defense(node_id, node)
 
 
 def get_sim_recipients(source_node_id: str):
@@ -383,12 +387,16 @@ def sim_attack_state_message(attack_type: str, started: bool):
 
 async def emit_sim_alert(node_id: str, msg_id: str, dlc: int, data: str,
                          reason: str, message: str):
-    defense = nodes.get(node_id, {}).get("defense", {})
+    node = nodes.get(node_id)
+    if not node:
+        return
+    defense = node.setdefault("defense", {})
     defense["last_alert_id"] = normalize_can_id(msg_id)
     defense["last_reason"] = reason
     defense["last_reason_at_ms"] = int(time.time() * 1000)
     defense["last_alert_signature"] = build_sim_signature(msg_id, dlc, data)
     await emit_log(node_id, "ALERT", message)
+    await maybe_auto_activate_defense(node_id, node)
 
 
 def is_sim_defense_active(node: dict):
@@ -442,6 +450,87 @@ def should_block_sim_frame(node: dict, msg_id: str, dlc: int, data: str):
         return False
 
     return signature == build_sim_signature(msg_id, dlc, data)
+
+
+async def activate_defense_for_node(node_id: str, node: dict, duration: int):
+    """Shared 'defense on' logic, used by the manual API endpoint and auto-defense."""
+    defense = node.setdefault("defense", {})
+
+    if node.get("is_sim"):
+        now = int(time.time() * 1000)
+        defense["active"] = True
+        defense["duration_ms"] = duration
+        defense["until_ms"] = now + duration
+        defense["trusted_ids"] = sorted(observed_frames.keys())
+        defense["last_allowed_at_ms"] = 0
+        defense["spoof_baseline_bytes"] = []
+        defense["spoof_baseline_dlc"] = 0
+        if defense.get("last_reason") == "spoofing":
+            baseline = observed_frames.get(defense.get("last_alert_id"))
+            if baseline:
+                defense["spoof_baseline_bytes"] = list(baseline["payload_bytes"])
+                defense["spoof_baseline_dlc"] = int(baseline["payload_dlc"])
+
+        mitigation_nodes = []
+        if defense.get("last_reason") == "dos":
+            mitigation_nodes = await stop_active_attackers(node_id, {"dos"})
+        elif defense.get("last_reason") == "fuzzing":
+            mitigation_nodes = await stop_active_attackers(node_id, {"fuzz"})
+
+        await emit_log(
+            node_id,
+            "DEFENSE",
+            f"Simulation defense enabled duration={duration}ms"
+        )
+        if mitigation_nodes:
+            await emit_log(
+                node_id,
+                "DEFENSE",
+                f"Requested attack mitigation on: {', '.join(mitigation_nodes)}"
+            )
+        return {"defense_active": True, "message": f"Defense active for {duration} ms"}
+
+    mitigation_nodes = []
+    if defense.get("last_reason") == "dos":
+        mitigation_nodes = await stop_active_attackers(node_id, {"dos"})
+    elif defense.get("last_reason") == "fuzzing":
+        mitigation_nodes = await stop_active_attackers(node_id, {"fuzz"})
+
+    command = f"defense on {duration}\n"
+    try:
+        node["serial"].write(command.encode("utf-8"))
+    except Exception as e:
+        await emit_log(node_id, "ERROR", f"Failed to send defense on: {e}")
+        return {"defense_active": False, "message": str(e)}
+
+    message = (
+        f"Sent defense on {duration}"
+        if not mitigation_nodes
+        else f"Sent defense on {duration} and requested attack mitigation"
+    )
+    return {"defense_active": True, "optimistic": True, "message": message}
+
+
+async def maybe_auto_activate_defense(node_id: str, node: dict):
+    if not node.get("auto_defense"):
+        return
+
+    defense = node.setdefault("defense", {})
+    if not defense.get("last_reason"):
+        return
+
+    now = int(time.time() * 1000)
+    last_triggered = int(defense.get("auto_last_triggered_ms", 0))
+    if now - last_triggered < AUTO_DEFENSE_DEFAULT_DURATION_MS:
+        return
+
+    defense["auto_last_triggered_ms"] = now
+    await emit_log(
+        node_id,
+        "DEFENSE",
+        f"Auto-defense triggered: reason={defense.get('last_reason')}"
+    )
+    await activate_defense_for_node(node_id, node, AUTO_DEFENSE_DEFAULT_DURATION_MS)
 
 
 async def stop_active_attackers(target_node_id: str, attack_types):
@@ -538,7 +627,7 @@ async def process_serial_line(node_id: str, line: str):
                 )
         await broadcast_message(message)
     else:
-        update_node_alert_state_from_log(node_id, line)
+        await update_node_alert_state_from_log(node_id, line)
         # Standard log output
         await broadcast_message({
             "type": "log",
@@ -709,6 +798,7 @@ async def add_node(node: NodeCreate):
         "task": task,
         "attack_tasks": {},
         "active_attack_type": None,
+        "auto_defense": False,
         "defense": {
             "active": False,
             "until_ms": 0,
@@ -721,7 +811,8 @@ async def add_node(node: NodeCreate):
             "spoof_baseline_dlc": 0,
             "trusted_ids": [],
             "last_allowed_at_ms": 0,
-            "min_gap_ms": 100
+            "min_gap_ms": 100,
+            "auto_last_triggered_ms": 0
         }
     }
 
@@ -745,7 +836,8 @@ async def get_nodes():
             "id": n["id"],
             "name": n["name"],
             "port": n["port"],
-            "defense_active": n.get("defense", {}).get("active", False)
+            "defense_active": n.get("defense", {}).get("active", False),
+            "auto_defense": n.get("auto_defense", False)
         }
         for n in nodes.values()
     ]
@@ -859,39 +951,8 @@ async def control_defense(node_id: str, payload: DefensePayload):
         now = int(time.time() * 1000)
 
         if action == "on":
-            defense["active"] = True
-            defense["duration_ms"] = payload.duration
-            defense["until_ms"] = now + payload.duration
-            defense["trusted_ids"] = sorted(observed_frames.keys())
-            defense["last_allowed_at_ms"] = 0
-            defense["spoof_baseline_bytes"] = []
-            defense["spoof_baseline_dlc"] = 0
-            if defense.get("last_reason") == "spoofing":
-                baseline = observed_frames.get(defense.get("last_alert_id"))
-                if baseline:
-                    defense["spoof_baseline_bytes"] = list(baseline["payload_bytes"])
-                    defense["spoof_baseline_dlc"] = int(baseline["payload_dlc"])
-            mitigation_nodes = []
-            if defense.get("last_reason") == "dos":
-                mitigation_nodes = await stop_active_attackers(node_id, {"dos"})
-            elif defense.get("last_reason") == "fuzzing":
-                mitigation_nodes = await stop_active_attackers(node_id, {"fuzz"})
-            await emit_log(
-                node_id,
-                "DEFENSE",
-                f"Simulation defense enabled duration={payload.duration}ms"
-            )
-            if mitigation_nodes:
-                await emit_log(
-                    node_id,
-                    "DEFENSE",
-                    f"Requested attack mitigation on: {', '.join(mitigation_nodes)}"
-                )
-            return {
-                "status": "success",
-                "defense_active": True,
-                "message": f"Defense active for {payload.duration} ms"
-            }
+            result = await activate_defense_for_node(node_id, node, payload.duration)
+            return {"status": "success", **result}
 
         if action == "off":
             defense["active"] = False
@@ -924,23 +985,10 @@ async def control_defense(node_id: str, payload: DefensePayload):
         }
 
     if action == "on":
-        mitigation_nodes = []
-        if node.get("defense", {}).get("last_reason") == "dos":
-            mitigation_nodes = await stop_active_attackers(node_id, {"dos"})
-        elif node.get("defense", {}).get("last_reason") == "fuzzing":
-            mitigation_nodes = await stop_active_attackers(node_id, {"fuzz"})
-        command = f"defense on {payload.duration}\n"
-        response = {
-            "status": "success",
-            "defense_active": True,
-            "optimistic": True,
-            "message": (
-                f"Sent defense on {payload.duration}"
-                if not mitigation_nodes
-                else f"Sent defense on {payload.duration} and requested attack mitigation"
-            )
-        }
-    elif action == "off":
+        result = await activate_defense_for_node(node_id, node, payload.duration)
+        return {"status": "success", **result}
+
+    if action == "off":
         command = "defense off\n"
         response = {
             "status": "success",
@@ -962,6 +1010,26 @@ async def control_defense(node_id: str, payload: DefensePayload):
         raise HTTPException(status_code=500, detail=str(e))
 
     return response
+
+
+class AutoDefensePayload(BaseModel):
+    enabled: bool
+
+
+@app.post("/api/nodes/{node_id}/auto-defense")
+async def control_auto_defense(node_id: str, payload: AutoDefensePayload):
+    if node_id not in nodes:
+        raise HTTPException(status_code=404, detail="Node not found")
+
+    node = nodes[node_id]
+    node["auto_defense"] = payload.enabled
+    await emit_log(
+        node_id,
+        "STATUS",
+        f"auto_defense={1 if payload.enabled else 0}"
+    )
+    return {"status": "success", "auto_defense_active": payload.enabled}
+
 
 class AttackAction(BaseModel):
     action: str

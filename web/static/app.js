@@ -139,13 +139,28 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!nodeStateMap[nodeId]) return;
         nodeStateMap[nodeId].defense_active = !!active;
         nodeStateMap[nodeId].defense_text = text || (active ? 'Defense active' : 'Defense idle');
-        
+
+        if (activeControlNodeId === nodeId) {
+            updateGlobalDefenseUI();
+        }
+    }
+
+    function setAutoDefenseState(nodeId, enabled) {
+        if (!nodeStateMap[nodeId]) return;
+        nodeStateMap[nodeId].auto_defense = !!enabled;
+
         if (activeControlNodeId === nodeId) {
             updateGlobalDefenseUI();
         }
     }
 
     function syncDefenseStateFromLog(nodeId, raw) {
+        const autoMatch = raw.match(/\[STATUS\]\s+auto_defense=(\d+)/);
+        if (autoMatch) {
+            setAutoDefenseState(nodeId, autoMatch[1] !== '0');
+            return;
+        }
+
         const statusMatch = raw.match(/\[STATUS\]\s+defense_active=(\d+)/);
         if (statusMatch) {
             const active = statusMatch[1] !== '0';
@@ -240,6 +255,12 @@ document.addEventListener('DOMContentLoaded', () => {
         badge.textContent = state.defense_text;
         badge.classList.toggle('active', state.defense_active);
         badge.classList.toggle('idle', !state.defense_active);
+
+        const autoBtn = document.getElementById('global-auto-defense-btn');
+        if (autoBtn) {
+            autoBtn.textContent = state.auto_defense ? 'Auto-Defend: On' : 'Auto-Defend: Off';
+            autoBtn.classList.toggle('active', !!state.auto_defense);
+        }
     }
 
     function updateGlobalAttacksUI() {
@@ -310,6 +331,21 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const result = await controlDefense(activeControlNodeId, 'off');
                 setDefenseState(activeControlNodeId, false, result.message || 'Defense cleared');
+            } catch (e) { alert(`Error: ${e.message}`); }
+        });
+
+        document.getElementById('global-auto-defense-btn').addEventListener('click', async () => {
+            if (!activeControlNodeId || !nodeStateMap[activeControlNodeId]) return;
+            const enabled = !nodeStateMap[activeControlNodeId].auto_defense;
+            try {
+                const res = await fetch(`${API_BASE}/api/nodes/${activeControlNodeId}/auto-defense`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ enabled })
+                });
+                if (!res.ok) throw new Error(await readErrorMessage(res));
+                const result = await res.json();
+                setAutoDefenseState(activeControlNodeId, result.auto_defense_active ?? enabled);
             } catch (e) { alert(`Error: ${e.message}`); }
         });
 
@@ -471,6 +507,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 nodeStateMap[node.id] = {
                     defense_active: !!node.defense_active,
                     defense_text: node.defense_active ? 'Defense active' : 'Defense idle',
+                    auto_defense: !!node.auto_defense,
                     attacks: { dos: false, repeat: false, replay: false, fuzz: false, spoof: false }
                 };
             }
