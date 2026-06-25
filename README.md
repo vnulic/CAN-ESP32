@@ -10,6 +10,10 @@ ESP32 + TJA1050 CAN demo with:
 
 The firmware is tailored for ESP32 and keeps legacy text-over-CAN mode for compatibility.
 
+## Video Tutorial
+
+<video src="tutorial.mp4" controls width="100%"></video>
+
 ## Hướng dẫn chạy lần đầu (Quick Start)
 
 Dành cho người mới chạy chương trình này lần đầu.
