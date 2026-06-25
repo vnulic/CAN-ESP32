@@ -117,7 +117,7 @@ lặp theo chu kỳ định sẵn, nhằm kiểm tra khả năng phát hiện kh
 \IfFileExists{images/replay_alert.png}{%
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.98\textwidth]{images/replay_alert.png}
+  \includegraphics[width=0.9875\textwidth]{images/replay_alert.png}
   \caption{Giao diện ghi nhận cảnh báo ở giai đoạn phát hiện tấn công Replay}
   \label{fig:replay-alert}
 \end{figure}
@@ -126,14 +126,10 @@ lặp theo chu kỳ định sẵn, nhằm kiểm tra khả năng phát hiện kh
 báo tấn công Replay}
 }
 
-Nếu hệ thống có chèn bộ đếm ở byte cuối, khung bị phát lại sẽ giữ nguyên giá trị bộ đếm cũ.
-Điều này giúp giải thích vì sao phía nhận có thể sinh cảnh báo \texttt{REPLAY suspected} do
-trùng lặp dữ liệu hoặc do sai lệch chuỗi bộ đếm giữa các lần xuất hiện của cùng một CAN ID.
-
 \IfFileExists{images/replay_defend.png}{%
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.98\textwidth]{images/replay_defend.png}
+  \includegraphics[width=0.75\textwidth]{images/replay_defend.png}
   \caption{Giao diện sau khi bật defense để chặn khung replay}
   \label{fig:replay-defend}
 \end{figure}
@@ -253,7 +249,6 @@ khác như \texttt{0x120} vẫn tiếp tục xuất hiện trên giao diện. Đ
 đã chặn được luồng giả mạo theo đúng CAN ID nghi ngờ mà không làm gián đoạn hoàn toàn
 quá trình giám sát bus.
 
-\reportsection{III. Video minh họa các kịch bản}
 Toàn bộ video minh họa cho các bước tấn công và phòng thủ của bốn kịch bản.
 
 \begin{itemize}[leftmargin=*]

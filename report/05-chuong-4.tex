@@ -78,8 +78,6 @@ Trong mô hình thực nghiệm hiện tại, firmware mặc định sử dụng
 CAN logic và GPIO27 làm đường nhận CAN logic. Hai chân này được nối với module
 transceiver ngoài để hình thành một nút CAN hoàn chỉnh.
 
-\reportsubsection{4.3.1 Ánh xạ chân tín hiệu}
-
 \begin{table}[H]
 \centering
 \begin{tabular}{|>{\raggedright\arraybackslash}p{3.2cm}|>{\raggedright\arraybackslash}p{2.4cm}|>{\raggedright\arraybackslash}p{3.2cm}|>{\raggedright\arraybackslash}p{4.2cm}|}
@@ -195,30 +193,7 @@ Mô hình CyberCAN Defense lựa chọn 500 kbps vì đây là mức cấu hình
 để tái hiện các tình huống tấn công như replay hay flood, đồng thời vẫn ổn định với hệ
 thống dây nối ngắn trên bàn thí nghiệm.
 
-\reportsubsection{4.5.3 Bộ lọc khung và phạm vi tiếp nhận}
-
-Trên bus CAN, mọi nút đều nhìn thấy toàn bộ bản tin đang lưu thông nhưng không phải nút
-nào cũng cần xử lý tất cả các ID. Acceptance filter giúp giảm tải cho vi điều khiển bằng
-cách giới hạn những khung được đưa lên tầng phần mềm. Nếu mục tiêu là xây dựng IDS
-hoặc node giám sát, chính sách lọc rộng hoặc nhận toàn bộ khung là cần thiết để giữ trọn
-ngữ cảnh của lưu lượng. Ngược lại, với một ECU mô phỏng chỉ phục vụ số ít ID xác định,
-lọc chặt hơn sẽ giúp giảm số lượng bản tin không liên quan.
-
-\begin{table}[H]
-\centering
-\begin{tabular}{|p{4cm}|p{8.6cm}|}
-\hline
-\textbf{Vai trò nút} & \textbf{Định hướng cấu hình tiếp nhận} \\ \hline
-ECU mô phỏng & Ưu tiên tiếp nhận các ID phục vụ chức năng mô phỏng chính \\ \hline
-Nút tấn công & Có thể tiếp nhận rộng để quan sát và khai thác lại lưu lượng hợp lệ \\ \hline
-Nút giám sát hoặc IDS & Nên tiếp nhận toàn bộ hoặc gần toàn bộ khung để bảo toàn ngữ cảnh phân tích \\ \hline
-\end{tabular}
-\caption{Định hướng lọc khung theo vai trò nút trong hệ thống}
-\end{table}
-
-\reportsection{4.6 Truyền nhận và xử lý lỗi trên ESP32}
-
-\reportsubsection{4.6.1 Quá trình truyền và nhận khung}
+\reportsection{4.6 Truyền nhận trên ESP32}
 
 Ở phía truyền, firmware chuẩn bị bản tin bằng cách xác định ID, độ dài dữ liệu, kiểu khung
 và nội dung payload trước khi đưa vào hàng đợi của driver. Bộ điều khiển TWAI sau đó
@@ -232,33 +207,4 @@ Trong CAN cổ điển, một khung dữ liệu có thể dùng Standard ID 11 b
 29 bit. Việc lựa chọn kiểu ID cần được thống nhất ngay từ giai đoạn thiết kế hệ thống để
 tránh sai khác khi các nút giao tiếp chéo với nhau.
 
-\reportsubsection{4.6.2 Quản lý lỗi và trạng thái bus}
 
-Một ưu điểm lớn của CAN là cơ chế phát hiện và cô lập lỗi ngay tại mức bộ điều khiển.
-TWAI duy trì các bộ đếm lỗi truyền và nhận; khi lỗi tăng cao, nút có thể chuyển qua các
-trạng thái như \textit{error warning}, \textit{error passive} hoặc \textit{bus-off}. Những trạng
-thái này rất quan trọng trong thực nghiệm vì chúng phản ánh trực tiếp chất lượng kết nối
-và độ đúng của cấu hình phần cứng.
-
-Các nguyên nhân thường gây lỗi trong mô hình ESP32 gồm:
-
-\begin{itemize}[leftmargin=1.5cm, itemsep=0.6em]
-    \item Sai tốc độ bit giữa các nút trên cùng bus.
-    \item Chỉ có một nút hoạt động nên không có thiết bị ACK bản tin.
-    \item Đấu ngược CANH và CANL hoặc không nối mass chung.
-    \item Cấp nguồn sai cho transceiver hoặc dùng mức logic không tương thích với ESP32.
-    \item Dây nối quá dài, tiếp xúc kém hoặc môi trường có nhiễu cao.
-\end{itemize}
-
-Trong quá trình triển khai, việc theo dõi trạng thái lỗi của TWAI giúp nhóm xác định nhanh
-vấn đề đang nằm ở cấu hình tốc độ, lớp vật lý hay logic xử lý tầng trên. Phần hiện thực
-firmware và cơ chế chẩn đoán cụ thể được trình bày ở Chương 5.
-
-\reportsection{4.9 Kết luận}
-
-TWAI giúp ESP32 trở thành một nền tảng phù hợp để xây dựng các nút CAN thử nghiệm
-trong đề tài CyberCAN Defense. Mặc dù không hỗ trợ CAN FD và vẫn phải kết hợp với
-transceiver ngoài, ESP32 vẫn đáp ứng tốt yêu cầu mô phỏng ECU, thu thập lưu lượng, phát
-động tấn công và hỗ trợ phân tích an ninh trên bus CAN. Việc hiểu rõ kiến trúc TWAI, yêu
-cầu phần cứng và cơ chế xử lý lỗi là cơ sở quan trọng để triển khai đúng hệ thống được mô
-tả ở các chương tiếp theo.

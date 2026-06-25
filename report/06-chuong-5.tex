@@ -25,6 +25,7 @@ khiển CAN ở tốc độ 500 kbps.
 \centering
 \begin{tabular}{|>{\raggedright\arraybackslash}p{5cm}|>{\raggedright\arraybackslash}p{3cm}|>{\raggedright\arraybackslash}p{5.5cm}|}
 \hline
+\rowcolor{red!20}\
 \textbf{Tham số} & \textbf{Giá trị} & \textbf{Ghi chú} \\ \hline
 Tốc độ CAN & 500 kbps & Phù hợp cho mô hình thử nghiệm \\ \hline
 Chân TX CAN & GPIO 26 & Kết nối tới TXD của transceiver \\ \hline
@@ -214,18 +215,23 @@ toàn bộ bus trong một cửa sổ thời gian trượt, ghi nhận số lư�
 thay đổi ID liên tiếp -- hai chỉ số đặc trưng của tấn công Fuzzing.
 
 \begin{table}[H]
-\centering
-\begin{tabular}{|>{\raggedright\arraybackslash}p{3.6cm}|>{\raggedright\arraybackslash}p{3.8cm}|>{\raggedright\arraybackslash}p{6cm}|}
-\hline
-\textbf{Loại cảnh báo} & \textbf{Phương pháp phát hiện} & \textbf{Điều kiện kích hoạt} \\ \hline
-Replay (phát lại) & So sánh bộ đếm & Byte số thứ tự không tăng đúng thứ tự \\ \hline
-DoS (ngập lưu lượng) & Ước tính tốc độ & Tốc độ cùng ID $>$ 60 khung/giây \\ \hline
-Fuzzing (quét ngẫu nhiên) & Theo dõi toàn bus & $\geq$ 4 ID mới, $\geq$ 5 đổi ID / 1,2 giây \\ \hline
-Spoofing (giả mạo) & So sánh baseline & Payload lệch $\geq$ 2 byte so với mẫu bình thường \\ \hline
-\end{tabular}
-\caption{Tổng hợp các loại cảnh báo IDS và điều kiện kích hoạt}
+	\centering
+	\begin{tabular}{|>{\raggedright\arraybackslash}p{3.6cm}|>{\raggedright\arraybackslash}p{3.8cm}|>{\raggedright\arraybackslash}p{6cm}|}
+		\hline
+		\rowcolor{red!25}
+		\textbf{Loại cảnh báo} & \textbf{Phương pháp phát hiện} & \textbf{Điều kiện kích hoạt} \\
+		\hline
+		Replay (phát lại) & So sánh bộ đếm & Byte số thứ tự không tăng đúng thứ tự \\
+		\hline
+		DoS (ngập lưu lượng) & Ước tính tốc độ & Tốc độ cùng ID $>$ 60 khung/giây \\
+		\hline
+		Fuzzing (quét ngẫu nhiên) & Theo dõi toàn bus & $\geq$ 4 ID mới, $\geq$ 5 đổi ID / 1,2 giây \\
+		\hline
+		Spoofing (giả mạo) & So sánh baseline & Payload lệch $\geq$ 2 byte so với mẫu bình thường \\
+		\hline
+	\end{tabular}
+	\caption{Tổng hợp các loại cảnh báo IDS và điều kiện kích hoạt}
 \end{table}
-
 % ----------------------------------------------------------
 \reportsubsection{5.2.4 Bộ mô phỏng tấn công}
 % ----------------------------------------------------------
@@ -238,7 +244,7 @@ trong vòng lặp chính với chu kỳ có thể tùy chỉnh.
 \centering
 \begin{tabular}{|>{\raggedright\arraybackslash}p{2.5cm}|>{\raggedright\arraybackslash}p{2.5cm}|>{\raggedright\arraybackslash}p{8cm}|}
 \hline
-\textbf{Kiểu tấn công} & \textbf{Chu kỳ mặc định} & \textbf{Mô tả} \\ \hline
+\cellcolor{red!20}\textbf{Kiểu tấn công} &\cellcolor{red!20} \textbf{Chu kỳ mặc định} & \cellcolor{red!20}\textbf{Mô tả} \\ \hline
 Replay & 250 ms & Phát lại nguyên bản khung hợp lệ đã bắt được, kể cả bộ đếm cũ \\ \hline
 DoS & 20 ms & Ngập lưu lượng trên một CAN ID với tần suất cao \\ \hline
 Fuzzing & 35 ms & Phát liên tục các khung với ID và payload ngẫu nhiên \\ \hline
@@ -293,21 +299,6 @@ thời gian thực qua kênh WebSocket.
         }{Giao diện web giám sát, tấn công và phòng thủ CAN}
     }%
 }
-
-% ----------------------------------------------------------
-\reportsubsection{5.2.6 Quản lý trạng thái và lưu trữ dữ liệu}
-% ----------------------------------------------------------
-
-Hệ thống không sử dụng cơ sở dữ liệu lưu trữ bền vững. Phía firmware, toàn bộ
-trạng thái vận hành được lưu trong bộ nhớ RAM nội bộ của ESP32, bao gồm khung bắt
-gần nhất, bản ghi cảnh báo, các tác vụ tấn công đang chạy và bộ nhớ phòng thủ.
-Dung lượng sử dụng nằm trong giới hạn an toàn của ESP32 với 520 kB SRAM tích hợp.
-
-Phía ứng dụng web, trạng thái của tất cả nút và lịch sử khung quan sát được cũng
-chỉ lưu trong bộ nhớ của tiến trình Python. Khi chương trình dừng, toàn bộ thông
-tin này bị giải phóng. Thiết kế này phù hợp với mục tiêu trình diễn và thực nghiệm
-ngắn hạn, nhưng cần bổ sung lớp lưu trữ bền vững nếu mở rộng sang các ứng dụng
-giám sát dài hạn.
 
 % ============================================================
 \reportsection{5.3 Nguyên lý hoạt động của hệ thống}
@@ -413,18 +404,38 @@ gần nhất và thiết lập quy tắc chặn phù hợp với từng loại t
 duy trì luật chặn mặc định là 10 giây nhưng có thể tùy chỉnh.
 
 \begin{table}[H]
-\centering
-\begin{tabular}{|>{\raggedright\arraybackslash}p{3.2cm}|>{\raggedright\arraybackslash}p{4.0cm}|>{\raggedright\arraybackslash}p{6.2cm}|}
-\hline
-\textbf{Loại tấn công} & \textbf{Đối tượng bị chặn} & \textbf{Tiêu chí lọc} \\ \hline
-Replay (phát lại) & Khung cùng ID và nội dung & Khớp chính xác với chữ ký khung bị cảnh báo \\ \hline
-DoS (ngập lưu lượng) & Mọi khung cùng ID & Chặn toàn bộ, không phân biệt nội dung \\ \hline
-Spoofing (giả mạo) & Khung cùng ID đáng ngờ & Lọc theo độ lệch so với baseline đã học \\ \hline
-Fuzzing (quét ngẫu nhiên) & Mọi ID chưa tin cậy & Chỉ cho phép ID đã ổn định trước cảnh báo \\ \hline
-\end{tabular}
-\caption{Chiến lược phòng thủ theo từng loại tấn công}
+	\centering
+	\begin{tabular}{|>{\raggedright\arraybackslash}p{3.2cm}|>{\raggedright\arraybackslash}p{4.0cm}|>{\raggedright\arraybackslash}p{6.2cm}|}
+		\hline
+		\rowcolor{red!20}
+		\textbf{Loại tấn công} &
+		\textbf{Đối tượng bị chặn} &
+		\textbf{Tiêu chí lọc} \\
+		\hline
+		
+		Replay (phát lại) &
+		Khung cùng ID và nội dung &
+		Khớp chính xác với chữ ký khung bị cảnh báo \\
+		\hline
+		
+		DoS (ngập lưu lượng) &
+		Mọi khung cùng ID &
+		Chặn toàn bộ, không phân biệt nội dung \\
+		\hline
+		
+		Spoofing (giả mạo) &
+		Khung cùng ID đáng ngờ &
+		Lọc theo độ lệch so với baseline đã học \\
+		\hline
+		
+		Fuzzing (quét ngẫu nhiên) &
+		Mọi ID chưa tin cậy &
+		Chỉ cho phép ID đã ổn định trước cảnh báo \\
+		\hline
+		
+	\end{tabular}
+	\caption{Chiến lược phòng thủ theo từng loại tấn công}
 \end{table}
-
 Cần lưu ý rằng cơ chế phòng thủ hiện tại hoạt động ở tầng phần mềm của nút nhận,
 không loại bỏ khung tấn công khỏi bus vật lý. Kẻ tấn công vẫn có thể tiếp tục phát
 khung; hệ thống chỉ ngăn tầng ứng dụng xử lý các khung bị nghi ngờ trong thời gian
