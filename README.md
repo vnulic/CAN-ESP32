@@ -25,7 +25,7 @@ Dành cho người mới chạy chương trình này lần đầu.
 ### 2. Lấy mã nguồn
 
 ```powershell
-git clone https://github.com/vnulic/CAN-ESP32-thi-nghiem.git
+git clone https://github.com/vnulic/CAN-ESP32.git
 cd CAN-ESP32-thi-nghiem
 ```
 
