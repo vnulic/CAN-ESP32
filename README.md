@@ -10,6 +10,66 @@ ESP32 + TJA1050 CAN demo with:
 
 The firmware is tailored for ESP32 and keeps legacy text-over-CAN mode for compatibility.
 
+## Hướng dẫn chạy lần đầu (Quick Start)
+
+Dành cho người mới chạy chương trình này lần đầu.
+
+### 1. Chuẩn bị
+
+- **Phần cứng**: ít nhất 1 board ESP32 (khuyến nghị 2-3 board để demo tấn công/phòng thủ đầy đủ), mỗi board nối với module CAN transceiver `TJA1050` (RX → `GPIO27`, TX → `GPIO26`), cáp USB để nạp firmware và giao tiếp UART. Nếu chưa có phần cứng, có thể bỏ qua bước nạp firmware và dùng node giả lập (`SIM1`, `SIM2`, ...) trong web UI.
+- **Phần mềm**:
+  - [Python 3.10+](https://www.python.org/downloads/) (đã có sẵn `pip`)
+  - [PlatformIO Core](https://platformio.org/install/cli) — cài bằng `pip install platformio`, hoặc dùng extension PlatformIO IDE trong VS Code
+  - Driver USB-to-UART cho board (thường là CP210x hoặc CH340, tùy loại board ESP32)
+
+### 2. Lấy mã nguồn
+
+```powershell
+git clone https://github.com/vnulic/CAN-ESP32-thi-nghiem.git
+cd CAN-ESP32-thi-nghiem
+```
+
+### 3. Nạp firmware lên board (nếu dùng phần cứng thật)
+
+Xác định cổng COM của board đang cắm:
+
+```powershell
+python -m platformio device list
+```
+
+Build và nạp:
+
+```powershell
+python -m platformio run -t upload --upload-port COM7
+```
+
+Nếu gặp lỗi `Wrong boot mode detected (0x13)`, giữ nút **BOOT** trên board, nhấn-thả nhanh **EN/RESET** (vẫn giữ BOOT), rồi chạy lại lệnh upload trong lúc vẫn giữ BOOT khoảng 10-15 giây.
+
+Lặp lại bước này cho mỗi board (Node A, B, C) với cổng COM tương ứng.
+
+### 4. Cài và chạy web control panel
+
+```powershell
+python -m pip install -r web/requirements.txt
+cd web
+python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+### 5. Mở trình duyệt
+
+Truy cập:
+
+```text
+http://localhost:8000
+```
+
+### 6. Thêm node trong giao diện web
+
+- Dùng phần cứng thật: thêm node với cổng COM tương ứng (ví dụ `COM7`, `COM8`, `COM9`)
+- Không có phần cứng: thêm node giả lập với tên cổng `SIM1`, `SIM2`, `SIM3`, ...
+
+Sau khi thêm node, chọn node ở sidebar bên trái để gửi frame CAN hoặc khởi chạy các kịch bản tấn công (DoS, Replay, Fuzzing, Spoofing) và xem cảnh báo/phòng thủ theo thời gian thực. Tham khảo phần "A/B/C Demo Script" và "Web Demo Flow" dưới đây để chạy đúng kịch bản.
+
 ## Hardware
 
 Default firmware settings:
