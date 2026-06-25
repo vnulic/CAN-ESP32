@@ -1,0 +1,29 @@
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Mạng CAN tổng quát}}{5}{figure.2.1}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Standard CAN: 11-Bit Indentifier}}{7}{figure.2.2}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Extended CAN: 29-Bit Indentifier}}{7}{figure.2.3}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Sơ đồ khối của một nút CAN dùng ESP32}}{13}{figure.4.1}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Quy trình tổng quát khi khởi tạo và vận hành TWAI trên ESP32}}{15}{figure.4.2}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Module CAN TJA1050}}{18}{figure.5.1}%
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Sơ đồ khối phần cứng tổng quan}}{19}{figure.5.2}%
+\contentsline {figure}{\numberline {5.3}{\ignorespaces Kiến trúc tổng thể hai lớp phần mềm của hệ thống}}{20}{figure.5.3}%
+\contentsline {figure}{\numberline {5.4}{\ignorespaces Giao diện web giám sát, tấn công và phòng thủ CAN}}{23}{figure.5.4}%
+\contentsline {figure}{\numberline {5.5}{\ignorespaces Sơ đồ luồng xử lý tổng thể của hệ thống}}{23}{figure.5.5}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {6.1}{\ignorespaces Mô hình phần cứng giao tiếp CAN với 2 node ESP32}}{27}{figure.6.1}%
+\contentsline {figure}{\numberline {6.2}{\ignorespaces Phiên giao tiếp CAN hai chiều bình thường hiển thị trên giao diện web}}{28}{figure.6.2}%
+\contentsline {figure}{\numberline {6.3}{\ignorespaces Mô hình phần cứng thực tế khi bổ sung thêm node hacker vào bus CAN}}{29}{figure.6.3}%
+\contentsline {figure}{\numberline {6.4}{\ignorespaces Giao diện ghi nhận cảnh báo ở giai đoạn phát hiện tấn công DoS}}{30}{figure.6.4}%
+\contentsline {figure}{\numberline {6.5}{\ignorespaces Giao diện sau khi bật defense để chặn lưu lượng DoS}}{31}{figure.6.5}%
+\contentsline {figure}{\numberline {6.6}{\ignorespaces Giao diện ghi nhận cảnh báo ở giai đoạn phát hiện tấn công Replay}}{32}{figure.6.6}%
+\contentsline {figure}{\numberline {6.7}{\ignorespaces Giao diện sau khi bật defense để chặn khung replay}}{32}{figure.6.7}%
+\contentsline {figure}{\numberline {6.8}{\ignorespaces Giao diện ghi nhận cảnh báo ở giai đoạn phát hiện tấn công Fuzzing}}{33}{figure.6.8}%
+\contentsline {figure}{\numberline {6.9}{\ignorespaces Giao diện sau khi bật defense để chặn lưu lượng Fuzzing}}{34}{figure.6.9}%
+\contentsline {figure}{\numberline {6.10}{\ignorespaces Giao diện ghi nhận cảnh báo ở giai đoạn phát hiện tấn công Spoofing}}{35}{figure.6.10}%
+\contentsline {figure}{\numberline {6.11}{\ignorespaces Giao diện sau khi bật defense để chặn khung spoofing}}{36}{figure.6.11}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {7.1}{\ignorespaces AUTOSAR Classic Platform Architecture}}{41}{figure.7.1}%
