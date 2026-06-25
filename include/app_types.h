@@ -104,6 +104,7 @@ struct FrameTracker {
   uint8_t baselineSamples = 0;
   bool baselineReady = false;
   bool spoofAlerted = false;
+  uint32_t lastSpoofAlertAtMs = 0;
   int8_t lastMlPrediction = -1;
   uint32_t lastMlAlertAt = 0;
   uint32_t lastSeenAt = 0;

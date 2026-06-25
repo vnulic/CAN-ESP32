@@ -211,6 +211,7 @@ void resetSequenceState(FrameTracker* tracker) {
   tracker->baselineSamples = 0;
   tracker->baselineReady = false;
   tracker->spoofAlerted = false;
+  tracker->lastSpoofAlertAtMs = 0;
 }
 
 bool updateTrafficTracker(const CanFrame& frame, bool newIdInWindow) {
@@ -300,14 +301,26 @@ bool updateSpoofBaseline(FrameTracker* tracker, const CanFrame& frame) {
   const bool suspicious = isSpoofPayloadSuspicious(
       tracker->baselineData, tracker->baselineDlc, frame, &changed);
 
-  if (!tracker->spoofAlerted && suspicious) {
-    rememberAlert(frame, AlertType::Spoofing);
-    logLine("ALERT",
-            "SPOOFING suspected: ID=0x%0*lX changed_bytes=%u baseline_dlc=%u observed_dlc=%u",
-            frame.extended ? 8 : 3, static_cast<unsigned long>(frame.id),
-            changed, tracker->baselineDlc, payloadLength);
-    tracker->spoofAlerted = true;
-    return true;
+  if (suspicious) {
+    const uint32_t now = millis();
+    const bool cooldownElapsed =
+        (now - tracker->lastSpoofAlertAtMs) >= kSpoofAlertCooldownMs;
+
+    // Keep re-raising while the spoofed traffic continues (instead of a
+    // one-shot latch) so lastAlert/defense state doesn't go stale before a
+    // human reacts when auto-defense isn't enabled.
+    if (!tracker->spoofAlerted || cooldownElapsed) {
+      rememberAlert(frame, AlertType::Spoofing);
+      logLine("ALERT",
+              "SPOOFING suspected: ID=0x%0*lX changed_bytes=%u baseline_dlc=%u observed_dlc=%u",
+              frame.extended ? 8 : 3, static_cast<unsigned long>(frame.id),
+              changed, tracker->baselineDlc, payloadLength);
+      tracker->spoofAlerted = true;
+      tracker->lastSpoofAlertAtMs = now;
+      return true;
+    }
+
+    return false;
   }
 
   if (payloadLength == tracker->baselineDlc &&

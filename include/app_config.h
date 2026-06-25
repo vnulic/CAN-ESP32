@@ -51,6 +51,7 @@ constexpr uint8_t kFuzzIdChangeThreshold = 5;
 constexpr uint8_t kSpoofBaselineMinSamples = 1;
 constexpr uint8_t kSpoofChangedByteThreshold = 2;
 constexpr uint8_t kSpoofBaselineTolerance = 1;
+constexpr uint32_t kSpoofAlertCooldownMs = 1000;
 constexpr bool kEnableMlDetection = false;
 constexpr uint32_t kMlAlertCooldownMs = 1200;
 constexpr uint32_t kDefenseBlockDefaultMs = 10000;
