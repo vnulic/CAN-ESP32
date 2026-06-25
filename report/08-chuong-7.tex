@@ -23,6 +23,94 @@ Trong quá trình thực hiện, nhóm đã đạt được các kết quả n�
 
 Kết quả của dự án cho thấy cách tiếp cận phát hiện bất thường kết hợp chặn theo ID có thể nâng cao khả năng quan sát và giảm tác động của các bản tin nghi ngờ trong mô hình CAN thử nghiệm \cite{koscher2010,miller2015}. Đây là nền tảng phù hợp để tiếp tục phát triển các cơ chế bảo mật mạnh hơn cho mạng truyền thông nội bộ ô tô.
 
+\section{Ứng dụng Trí tuệ Nhân tạo (AI)}
+
+Trong quá trình thực hiện dự án CyberCAN Defense, nhóm đã sử dụng các công cụ Trí tuệ Nhân tạo (AI) như một công cụ hỗ trợ nghiên cứu, thiết kế hệ thống, phát triển phần mềm và xây dựng tài liệu kỹ thuật. AI được ứng dụng trong nhiều giai đoạn khác nhau của dự án nhằm nâng cao hiệu quả làm việc, rút ngắn thời gian nghiên cứu và hỗ trợ giải quyết các vấn đề kỹ thuật phức tạp.
+
+\subsection{Hỗ trợ nghiên cứu và tìm hiểu công nghệ}
+
+Trong giai đoạn tìm hiểu kiến thức nền tảng, AI hỗ trợ giải thích các khái niệm liên quan đến giao thức CAN Bus, kiến trúc TWAI của ESP32, nguyên lý hoạt động của bộ chuyển đổi CAN TJA1050, cơ chế Arbitration, Error Handling cũng như các hình thức tấn công phổ biến trên mạng CAN như Replay Attack, Spoofing Attack, Denial of Service (DoS) và Fuzzing Attack. Thông qua các cuộc trao đổi với AI, nhóm có thể nhanh chóng tiếp cận các kiến thức mới, xác định từ khóa nghiên cứu phù hợp và định hướng tìm kiếm các tài liệu chuyên ngành liên quan.
+
+\subsection{Hỗ trợ thiết kế hệ thống}
+
+AI được sử dụng để hỗ trợ xây dựng kiến trúc tổng thể của hệ thống CyberCAN Defense. Từ các ý tưởng ban đầu, AI hỗ trợ đề xuất sơ đồ khối hệ thống, sơ đồ luồng dữ liệu, lưu đồ thuật toán và mô hình kết nối giữa các thành phần như ESP32, TJA1050, CAN Bus, Node Attacker, Node Defender và giao diện Web Monitoring. Ngoài ra, AI còn hỗ trợ tạo các hình ảnh minh họa, sơ đồ kiến trúc và các bản phác thảo phục vụ cho quá trình thiết kế, giúp nhóm đánh giá và lựa chọn phương án triển khai phù hợp.
+án
+\subsection{Hỗ trợ phát triển và kiểm thử phần mềm}
+
+Trong quá trình lập trình, AI đóng vai trò như một trợ lý kỹ thuật hỗ trợ giải thích thư viện, đề xuất cấu trúc chương trình và hỗ trợ xây dựng các module chức năng như truyền nhận CAN Frame, Web Server, WebSocket và hệ thống giám sát thời gian thực. Khi gặp các lỗi biên dịch hoặc lỗi logic, AI được sử dụng để phân tích nguyên nhân và đề xuất các hướng khắc phục. Bên cạnh đó, AI còn hỗ trợ tối ưu hóa mã nguồn và đề xuất các phương pháp tổ chức chương trình nhằm nâng cao tính ổn định của hệ thống.
+
+Trong giai đoạn kiểm thử, AI hỗ trợ phân tích dữ liệu CAN Bus, xử lý các bản ghi sự kiện, đề xuất các kịch bản tấn công cần mô phỏng và hỗ trợ đánh giá kết quả thực nghiệm. Điều này giúp nhóm rút ngắn thời gian xử lý dữ liệu và nâng cao hiệu quả đánh giá hệ thống.
+
+\subsection{Hỗ trợ xây dựng cơ chế phát hiện tấn công}
+
+Đối với nội dung an ninh mạng ô tô, AI được sử dụng để tham khảo các phương pháp phát hiện xâm nhập như Rule-Based Detection, Frequency-Based Detection, Counter Verification, Anomaly Detection và các phương pháp ứng dụng Machine Learning trong hệ thống IDS. Từ các gợi ý này, nhóm đã lựa chọn và xây dựng cơ chế phát hiện phù hợp với khả năng xử lý của ESP32 cũng như phạm vi của đề tài. AI cũng hỗ trợ phân tích các kịch bản tấn công và đánh giá các điểm yếu bảo mật của mạng CAN truyền thống.
+
+\subsection{Hỗ trợ xây dựng báo cáo và thuyết trình}
+
+AI được sử dụng để hỗ trợ chuẩn hóa văn phong kỹ thuật, kiểm tra lỗi chính tả, đề xuất cấu trúc chương mục, hỗ trợ soạn thảo tài liệu bằng LaTeX và xây dựng các hình minh họa phục vụ báo cáo. Ngoài ra, AI còn hỗ trợ thiết kế slide thuyết trình, xây dựng sơ đồ trực quan và đề xuất cách trình bày nội dung một cách khoa học và dễ hiểu hơn.
+
+Nhờ việc ứng dụng AI trong nhiều giai đoạn khác nhau của dự án, nhóm đã nâng cao hiệu quả nghiên cứu, đẩy nhanh tiến độ phát triển hệ thống và cải thiện chất lượng tài liệu kỹ thuật. Tuy nhiên, AI chỉ đóng vai trò là công cụ hỗ trợ. Mọi quyết định về thiết kế hệ thống, lựa chọn giải pháp kỹ thuật, triển khai phần cứng, phát triển phần mềm, thực hiện thí nghiệm và đánh giá kết quả cuối cùng đều do các thành viên trong nhóm trực tiếp thực hiện và chịu trách nhiệm.
+\section{Liên hệ với kiến trúc phần mềm AUTOSAR}
+
+\subsection{Tổng quan về AUTOSAR}
+
+AUTOSAR (AUTomotive Open System ARchitecture) là tiêu chuẩn kiến trúc phần mềm được phát triển dành cho các hệ thống điện tử trên ô tô hiện đại. Mục tiêu của AUTOSAR là chuẩn hóa cách xây dựng phần mềm trên các ECU (Electronic Control Unit), cho phép các thành phần phần mềm được tái sử dụng trên nhiều nền tảng phần cứng khác nhau, đồng thời giảm chi phí phát triển và tăng khả năng tương thích giữa các nhà sản xuất.
+
+Trong AUTOSAR Classic Platform, hệ thống được tổ chức theo kiến trúc phân lớp bao gồm Application Layer, Runtime Environment (RTE) và Basic Software (BSW). Application Layer chứa các chức năng điều khiển của xe như động cơ, phanh ABS, túi khí hoặc các chức năng an ninh mạng. Runtime Environment đóng vai trò trung gian cho phép các thành phần phần mềm giao tiếp với nhau mà không phụ thuộc trực tiếp vào phần cứng. Basic Software cung cấp các dịch vụ nền tảng như hệ điều hành, giao tiếp CAN, quản lý bộ nhớ, chẩn đoán lỗi và các trình điều khiển thiết bị.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{images/AUTOSAR.png}
+	\caption{AUTOSAR Classic Platform Architecture}
+\end{figure}
+
+Kiến trúc phân lớp này giúp tách biệt phần mềm ứng dụng khỏi phần cứng, tạo điều kiện cho việc bảo trì, nâng cấp và phát triển các chức năng mới trên xe một cách hiệu quả hơn. Hiện nay, AUTOSAR Classic được sử dụng rộng rãi trong các ECU điều khiển động cơ, hệ thống phanh, hệ thống thân xe và các hệ thống điều khiển thời gian thực trên ô tô.
+
+\subsection{Khả năng tích hợp AUTOSAR với dự án}
+
+Trong hệ thống, ESP32 đóng vai trò tương tự bộ vi điều khiển trung tâm của một ECU. Bộ chuyển đổi CAN TJA1050 thực hiện chức năng tương đương tầng CAN Transceiver, chịu trách nhiệm chuyển đổi tín hiệu logic từ bộ điều khiển CAN thành tín hiệu vi sai trên đường truyền CAN Bus. TWAI Driver được tích hợp trong ESP32 đảm nhiệm vai trò tương tự CAN Driver trong AUTOSAR, cho phép gửi và nhận các CAN Frame trên mạng CAN.
+
+Bên cạnh đó, hệ thống phát hiện xâm nhập (IDS) được xây dựng trong đề tài có thể được xem như một Software Component hoạt động tại tầng Application Layer của AUTOSAR. Thành phần này tiếp nhận các CAN Frame từ mạng CAN, thực hiện phân tích dữ liệu và phát hiện các hành vi bất thường như Replay Attack, Spoofing Attack, Denial of Service (DoS) Attack và Fuzzing Attack. Khi phát hiện dấu hiệu tấn công, IDS sẽ sinh cảnh báo và gửi thông tin tới giao diện Web Monitoring để người dùng theo dõi.
+
+
+\begin{table}[H]
+	\centering
+	\caption{Liên hệ giữa CyberCAN Defense và kiến trúc AUTOSAR}
+	\label{tab:autosar_mapping}
+	
+	\begin{tabular}{|p{6cm}|p{6cm}|}
+		\hline
+		\textbf{CyberCAN Defense} &
+		\textbf{AUTOSAR Classic} \\
+		\hline
+		
+		ESP32 &
+		MCU của ECU \\
+		\hline
+		
+		TWAI Driver &
+		CAN Driver \\
+		\hline
+		
+		TJA1050 &
+		CAN Transceiver \\
+		\hline
+			
+		IDS Engine &
+		Security Software Component \\
+		\hline
+		
+		Web Monitoring Dashboard &
+		Diagnostic/Monitoring Service \\
+		\hline
+		
+	\end{tabular}
+\end{table}
+
+Từ góc nhìn của AUTOSAR, hệ thống CyberCAN Defense có thể được xem như một mô hình thu nhỏ của một ECU bảo mật trong ô tô hiện đại. Trong đó, Node Attacker mô phỏng một ECU bị xâm nhập hoặc một thiết bị độc hại được kết nối vào mạng CAN, trong khi Node Defender thực hiện vai trò giám sát và bảo vệ hệ thống. Cách tiếp cận này tương đồng với các giải pháp Intrusion Detection System đang được nghiên cứu và triển khai trong ngành công nghiệp ô tô nhằm đáp ứng các yêu cầu về an toàn và an ninh mạng theo các tiêu chuẩn hiện đại.
+
+Trong tương lai, hệ thống có thể được mở rộng bằng cách triển khai cơ chế IDS dưới dạng một Software Component trong AUTOSAR Classic Platform hoặc tích hợp với các Security Gateway ECU. Khi đó, hệ thống không chỉ phát hiện các cuộc tấn công trên mạng CAN mà còn có khả năng phối hợp với các thành phần khác trong xe để thực hiện các biện pháp phòng thủ chủ động. Điều này giúp tăng tính thực tiễn của đề tài và tạo tiền đề cho việc nghiên cứu các giải pháp bảo mật mạng ô tô theo hướng công nghiệp.
+
 \section{Hướng phát triển trong tương lai}
 Để mở rộng tiềm năng và ứng dụng thực tiễn của dự án, nhóm đề xuất một số hướng phát triển như sau:
 

@@ -1,0 +1,102 @@
+\chapter{Ứng dụng Trí tuệ Nhân tạo trong quá trình nghiên cứu và phát triển dự án}
+
+Trong quá trình thực hiện dự án CyberCAN Defense: Phát hiện và Phòng thủ Xâm nhập Mạng Nội bộ Ô tô, nhóm đã ứng dụng các công cụ Trí tuệ Nhân tạo (Artificial Intelligence - AI) nhằm hỗ trợ nghiên cứu, thiết kế hệ thống, phát triển phần mềm, xây dựng tài liệu và đánh giá kết quả thực nghiệm. AI được sử dụng như một công cụ hỗ trợ kỹ thuật giúp nâng cao hiệu quả làm việc, rút ngắn thời gian nghiên cứu và tăng chất lượng sản phẩm cuối cùng.
+
+\subsection{Hỗ trợ nghiên cứu và tiếp cận kiến thức mới}
+
+Lĩnh vực an ninh mạng ô tô và giao thức CAN Bus là một lĩnh vực tương đối chuyên sâu, đòi hỏi phải tìm hiểu đồng thời nhiều kiến thức liên quan đến hệ thống nhúng, truyền thông công nghiệp, mạng máy tính và bảo mật thông tin. Trong giai đoạn đầu của dự án, nhóm đã sử dụng các công cụ AI để hỗ trợ tìm hiểu các khái niệm kỹ thuật như:
+
+\begin{itemize}
+	\item Cấu trúc CAN Frame và cơ chế Arbitration.
+	\item Hoạt động của giao thức CAN Bus trong ô tô.
+	\item Kiến trúc TWAI Controller trên ESP32.
+	\item Các dạng tấn công phổ biến trên mạng CAN như Replay Attack, Spoofing Attack, Denial of Service (DoS) và Fuzzing Attack.
+	\item Các phương pháp phát hiện xâm nhập (Intrusion Detection System - IDS) được sử dụng trong hệ thống ô tô hiện đại.
+\end{itemize}
+
+AI hỗ trợ giải thích các khái niệm phức tạp bằng ngôn ngữ dễ hiểu hơn, đồng thời đề xuất các từ khóa nghiên cứu phù hợp giúp nhóm tiếp cận nhanh hơn với các tài liệu học thuật, tiêu chuẩn kỹ thuật và các dự án mã nguồn mở liên quan.
+
+\subsection{Hỗ trợ thiết kế hệ thống}
+
+Trong quá trình xây dựng kiến trúc tổng thể của hệ thống CyberCAN Defense, AI được sử dụng để đề xuất các phương án thiết kế và mô hình triển khai phù hợp với yêu cầu của đề tài.
+
+Cụ thể, AI hỗ trợ:
+
+\begin{itemize}
+	\item Xây dựng sơ đồ khối hệ thống.
+	\item Đề xuất mô hình kết nối giữa các ESP32 và bộ chuyển đổi CAN TJA1050.
+	\item Thiết kế luồng dữ liệu giữa CAN Bus, IDS và giao diện Web Monitoring.
+	\item Đề xuất các phương án triển khai Node Attacker và Node Defender.
+	\item Hỗ trợ lựa chọn các thành phần phần cứng phù hợp với khả năng thực hiện của nhóm.
+\end{itemize}
+
+Ngoài ra, AI còn được sử dụng để hỗ trợ tạo các sơ đồ minh họa, sơ đồ kiến trúc hệ thống, lưu đồ thuật toán và các hình ảnh mô tả nguyên lý hoạt động, giúp báo cáo trở nên trực quan và dễ hiểu hơn.
+
+\subsection{Hỗ trợ phát triển phần mềm}
+
+Trong giai đoạn lập trình, AI đóng vai trò như một trợ lý kỹ thuật giúp nhóm giải quyết nhiều vấn đề phát sinh trong quá trình phát triển hệ thống.
+
+Các nội dung được hỗ trợ bao gồm:
+
+\begin{itemize}
+	\item Giải thích cách sử dụng thư viện TWAI trên ESP32.
+	\item Hỗ trợ xây dựng chương trình gửi và nhận CAN Frame.
+	\item Đề xuất cấu trúc chương trình theo mô hình module hóa.
+	\item Hỗ trợ lập trình Web Server và giao diện giám sát thời gian thực.
+	\item Hỗ trợ giao tiếp WebSocket giữa ESP32 và trình duyệt.
+	\item Phân tích nguyên nhân lỗi biên dịch và lỗi logic trong chương trình.
+	\item Đề xuất các giải pháp tối ưu hóa mã nguồn và cải thiện hiệu năng hệ thống.
+\end{itemize}
+
+Bên cạnh đó, AI còn giúp nhóm hiểu rõ hơn về nguyên lý hoạt động của từng đoạn mã, từ đó hỗ trợ quá trình kiểm thử và hiệu chỉnh hệ thống.
+
+\subsection{Hỗ trợ xây dựng cơ chế phát hiện tấn công}
+
+Một trong những nội dung quan trọng của đề tài là xây dựng hệ thống phát hiện và phòng thủ trước các cuộc tấn công trên mạng CAN.
+
+AI được sử dụng để tham khảo các phương pháp phát hiện tấn công phổ biến hiện nay như:
+
+\begin{itemize}
+	\item Rule-Based Detection.
+	\item Frequency-Based Detection.
+	\item Counter Verification.
+	\item Anomaly Detection.
+	\item Machine Learning Based IDS.
+\end{itemize}
+
+Thông qua các gợi ý này, nhóm đã phân tích ưu nhược điểm của từng phương pháp và lựa chọn cơ chế phù hợp với khả năng xử lý của ESP32 cũng như phạm vi của đề tài. Điều này giúp hệ thống có khả năng phát hiện các hành vi bất thường trên CAN Bus với chi phí triển khai thấp và dễ mở rộng trong tương lai.
+
+\subsection{Hỗ trợ phân tích dữ liệu và kiểm thử}
+
+Trong quá trình thực nghiệm, hệ thống tạo ra một lượng lớn dữ liệu CAN Frame và các bản ghi sự kiện. AI được sử dụng để hỗ trợ:
+
+\begin{itemize}
+	\item Phân tích dữ liệu CAN thu thập được.
+	\item Xác định các mẫu lưu lượng bất thường.
+	\item Đánh giá kết quả phát hiện tấn công.
+	\item Hỗ trợ xây dựng các kịch bản kiểm thử.
+	\item Đề xuất các chỉ số đánh giá hiệu quả hệ thống.
+\end{itemize}
+
+Việc sử dụng AI giúp nhóm rút ngắn đáng kể thời gian xử lý dữ liệu và nâng cao hiệu quả đánh giá hệ thống.
+
+\subsection{Hỗ trợ xây dựng báo cáo và thuyết trình}
+
+Ngoài các nội dung kỹ thuật, AI còn được sử dụng để hỗ trợ xây dựng tài liệu dự án.
+
+Các ứng dụng bao gồm:
+
+\begin{itemize}
+	\item Xây dựng bố cục báo cáo.
+	\item Chuẩn hóa văn phong kỹ thuật.
+	\item Kiểm tra lỗi chính tả và ngữ pháp.
+	\item Hỗ trợ chuyển đổi nội dung sang định dạng \LaTeX.
+	\item Hỗ trợ xây dựng slide thuyết trình.
+	\item Đề xuất các hình ảnh và sơ đồ minh họa phù hợp với nội dung báo cáo.
+\end{itemize}
+
+Nhờ đó, báo cáo được trình bày khoa học hơn, thống nhất về hình thức và dễ tiếp cận đối với người đọc.
+
+\subsection{Đánh giá hiệu quả}
+
+Việc ứng dụng AI trong suốt quá trình thực hiện dự án đã mang lại nhiều lợi ích như rút ngắn thời gian nghiên cứu công nghệ mới, hỗ trợ giải quyết các vấn đề kỹ thuật phức tạp, nâng cao chất lượng mã nguồn và cải thiện chất lượng tài liệu dự án. Tuy nhiên, AI chỉ đóng vai trò là công cụ hỗ trợ. Mọi quyết định về thiết kế hệ thống, lựa chọn giải pháp kỹ thuật, triển khai phần cứng, lập trình, kiểm thử và đánh giá kết quả cuối cùng đều do các thành viên trong nhóm thực hiện và chịu trách nhiệm.

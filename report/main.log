@@ -1,10 +1,9 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (MiKTeX 25.12) (preloaded format=xelatex 2026.5.18)  24 JUN 2026 20:34
+This is XeTeX, Version 3.141592653-2.6-0.999997 (MiKTeX 25.12) (preloaded format=xelatex 2026.5.18)  25 JUN 2026 19:01
 entering extended mode
  restricted \write18 enabled.
- file:line:error style messages enabled.
  %&-line parsing enabled.
-**"e:/ki 1 nam 3/CSDL/CAN-ESP32-main/report/main.tex"
-(e:/ki 1 nam 3/CSDL/CAN-ESP32-main/report/main.tex
+**./main.tex
+(main.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-12-24>
 (E:\mktex\tex/latex/base\report.cls
@@ -758,7 +757,12 @@ Package: listings 2025/11/14 1.11b (Carsten Heinz)
     but found:
         2025/11/14 1.11b (Carsten Heinz)
     so I'm assuming it got fixed.
-
+(E:\mktex\tex/latex/colortbl\colortbl.sty
+Package: colortbl 2026/05/01 v1.0l Color table columns (DPC)
+\everycr=\toks44
+\minrowclearance=\skip76
+\rownum=\count371
+)
 (E:\mktex\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibrarychains.code.t
 ex
 File: tikzlibrarychains.code.tex 2025-08-29 v3.1.11a (3.1.11a)
@@ -989,7 +993,7 @@ Package hyperref Info: Link coloring ON on input line 93.
 \@outlinefile=\write4
 \openout4 = `main.out'.
 
-\c@lstlisting=\count371
+\c@lstlisting=\count372
 File: images/cover-logo.png Graphic file (type bmp)
 <images/cover-logo.png>
  [1
@@ -1037,89 +1041,96 @@ File: images/CAN_ID.png Graphic file (type bmp)
  [6]
 File: images/CAN_EX.png Graphic file (type bmp)
 <images/CAN_EX.png>
-File: images/CAN_FD.png Graphic file (type bmp)
-<images/CAN_FD.png>
- [7] [8]) (04-chuong-3.tex [9]
+ [7]) (04-chuong-3.tex [8]
 Chapter 3.
-[10
+[9
 
-] [11] [12] [13]) (05-chuong-4.tex [14]
+] [10]) (05-chuong-4.tex [11]
 Chapter 4.
-[15
+[12
 
-] [16] [17] [18] [19] [20]) (06-chuong-5.tex [21]
+] [13] [14] [15]) (06-chuong-5.tex [16]
 Chapter 5.
-[22
+[17
 
 ]
 File: images/TJA.png Graphic file (type bmp)
 <images/TJA.png>
- [23]
+ [18]
 File: images/so-do-ket-noi.png Graphic file (type bmp)
 <images/so-do-ket-noi.png>
 File: images/kien-truc-phan-mem.png Graphic file (type bmp)
 <images/kien-truc-phan-mem.png>
- [24] [25] [26] [27]
+ [19] [20] [21] [22]
 File: images/web-interface.png Graphic file (type bmp)
 <images/web-interface.png>
 File: images/so-do-luong-xu-ly.png Graphic file (type bmp)
 <images/so-do-luong-xu-ly.png>
- [28] [29] [30]) (07-chuong-6.tex [31] [32]
+ [23] [24] [25]) (07-chuong-6.tex [26]
 Chapter 6.
 File: images/mach_2_node.png Graphic file (type bmp)
 <images/mach_2_node.png>
 File: images/ch6-can-two-way-web.png Graphic file (type bmp)
 <images/ch6-can-two-way-web.png>
-[33
+[27
 
 ]
 File: images/mo-hinh-thuc-nghiem.png Graphic file (type bmp)
 <images/mo-hinh-thuc-nghiem.png>
- [34]
+ [28]
 File: images/dos_alert.png Graphic file (type bmp)
 <images/dos_alert.png>
- [35]
+ [29]
 File: images/dos_defend.png Graphic file (type bmp)
 <images/dos_defend.png>
- [36]
+ [30]
 File: images/replay_alert.png Graphic file (type bmp)
 <images/replay_alert.png>
- [37]
+ [31]
 File: images/replay_defend.png Graphic file (type bmp)
 <images/replay_defend.png>
- [38]
+ [32]
 File: images/fuzzing_alert.png Graphic file (type bmp)
 <images/fuzzing_alert.png>
- [39]
+ [33]
 File: images/fuzzing_defend.png Graphic file (type bmp)
 <images/fuzzing_defend.png>
- [40]
+ [34]
 File: images/spoof_alert.png Graphic file (type bmp)
 <images/spoof_alert.png>
- [41]
 File: images/spoof_defend.png Graphic file (type bmp)
 <images/spoof_defend.png>
- [42]) (08-chuong-7.tex [43]
+ [35]) (08-chuong-7.tex [36]
 Chapter 7.
-[44
+[37
 
-]) (09-tai-lieu-tham-khao.tex [45]) [46
+] [38] [39]
+File: images/AUTOSAR.png Graphic file (type bmp)
+<images/AUTOSAR.png>
+ [40] [41]) (09-tai-lieu-tham-khao.tex [42]) [43
 
 ] (main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-12-24>
  ***********
-Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 87A8EFB0840EB8EB02FDF7E5E3A80C74;18557.
+
+
+Package rerunfilecheck Warning: File `main.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `main.out':
+(rerunfilecheck)             Before: 4321F96A5E157E8108E0DA8741661034;17900
+(rerunfilecheck)             After:  716023BB508856338B09E3352E094ED8;17683.
  ) 
 Here is how much of TeX's memory you used:
- 44328 strings out of 402987
- 1073073 string characters out of 5455976
- 1821671 words of memory out of 5000000
- 72512 multiletter control sequences out of 15000+600000
+ 44418 strings out of 402987
+ 1074208 string characters out of 5455976
+ 1823248 words of memory out of 5000000
+ 72600 multiletter control sequences out of 15000+600000
  631883 words of font info for 102 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 84i,12n,104p,708b,729s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 84i,12n,104p,754b,729s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.pdf (55 pages).
+Output written on main.pdf (52 pages).

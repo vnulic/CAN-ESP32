@@ -82,21 +82,6 @@ Trong giao thức CAN, mỗi khung dữ liệu mang một mã định danh (ID -
     \end{figure}
 \end{itemize}
 
-\subsection{CAN FD (Flexible Data-rate)}
-CAN FD là phiên bản mở rộng của chuẩn CAN cổ điển, do Bosch phát triển vào năm 2012 và được tiêu chuẩn hóa trong ISO 11898-1:2015. Nó khắc phục các hạn chế về tốc độ và dung lượng dữ liệu với những điểm cải tiến chính:
-\begin{itemize}
-    \item \textbf{Tăng dung lượng dữ liệu:} CAN cổ điển giới hạn ở 8 byte dữ liệu. CAN FD hỗ trợ tối đa 64 byte dữ liệu mỗi khung.
-    \item \textbf{Tốc độ truyền linh hoạt:} Giai đoạn tranh chấp (arbitration phase) giữ tốc độ thấp để đảm bảo tương thích và đồng bộ. Giai đoạn truyền dữ liệu (data transmission phase) có thể đạt tốc độ cao hơn rất nhiều (tối đa 8 Mbps hoặc hơn).
-    \item \textbf{Tính tương thích ngược:} Có thể hoạt động chung với thiết bị chỉ hỗ trợ CAN cổ điển nhờ bit FDF (FD Format) giúp thiết bị cổ điển nhận biết và bỏ qua khung FD.
-    \item \textbf{Cấu trúc khung mới:} Bổ sung trường FDF, BRS (Bit Rate Switch) để xác định khung FD và tốc độ cao. Đồng thời mã kiểm tra lỗi CRC tăng lên 17-bit hoặc 21-bit tùy theo chiều dài thực tế của dữ liệu.
-\end{itemize}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=1\textwidth]{images/CAN_FD.png}
-	\caption{Flexible Data CAN}
-\end{figure}
-
 \subsection{Truyền và nhận dữ liệu}
 \begin{itemize}
     \item Tất cả thiết bị đều giám sát liên tục bus CAN.
@@ -112,9 +97,6 @@ CAN FD là phiên bản mở rộng của chuẩn CAN cổ điển, do Bosch ph�
     \item \textbf{Form Checking:} Đảm bảo khung dữ liệu đúng định dạng.
     \item \textbf{ACK Checking:} Thiết bị nhận phải xác nhận bằng cách gửi ACK.
 \end{itemize}
-
-\subsection{Giao tiếp đa điểm}
-Giao tiếp theo mô hình bus, nơi nhiều node kết nối chung trên hai dây tín hiệu CAN (CAN\_H và CAN\_L). Hai đầu của bus cần gắn điện trở $120\,\Omega$ để triệt tiêu phản xạ và đảm bảo tín hiệu ổn định.
 
 \section{Ứng dụng trong Automotive: Hệ thống ô tô}
 Trong các phương tiện giao thông hiện đại, đặc biệt là ô tô, giao thức CAN đóng vai trò là xương sống trong mạng truyền thông nội bộ. Với khả năng truyền thông tin hiệu quả, đáng tin cậy và chi phí thấp, CAN đã trở thành tiêu chuẩn công nghiệp trong các hệ thống điện tử trên xe.
